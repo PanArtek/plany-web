@@ -35,7 +35,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
       />
       <Nav />
-      <main>
+      <main className="pb-20 md:pb-0">
         <Hero />
         <Specjalizacje />
         <Realizacje />

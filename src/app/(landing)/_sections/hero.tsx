@@ -79,8 +79,8 @@ export function Hero() {
         <h1
           className="font-display font-extrabold text-text leading-[.9] tracking-tight mb-3 transition-all duration-700"
           style={{
-            fontSize: "clamp(38px,7vw,76px)",
-            letterSpacing: "-.04em",
+            fontSize: "clamp(34px,7vw,76px)",
+            letterSpacing: "-.03em",
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
             transitionDelay: loaded ? "600ms" : "0ms",
