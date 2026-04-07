@@ -1,46 +1,18 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 /**
- * Reveal-on-scroll hook with safe defaults.
+ * Reveal-on-scroll hook — degraded to always-visible.
  *
- * - SSR / pre-hydration: returns visible=true so content is in the HTML and
- *   visible to crawlers, screenshots, and JS-disabled users.
- * - On mount: if the element is already in the initial viewport, stays visible
- *   (no flash). Otherwise resets to false and the IntersectionObserver fades
- *   it in on scroll.
+ * The original IntersectionObserver gating broke SEO, screenshots, and any
+ * SSR'd HTML view because below-the-fold sections were rendered with opacity 0
+ * waiting for an observer that never fires in those contexts. Until we have a
+ * proper CSS-only reveal pattern, we always return visible=true. Hero retains
+ * its own initial fade-in via local `loaded` state.
  */
 export function useInView<T extends HTMLElement = HTMLDivElement>(
-  threshold = 0.12,
+  _threshold = 0.12,
 ) {
   const ref = useRef<T>(null);
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // If element is currently below the fold, reset and let observer fade it in.
-    const rect = el.getBoundingClientRect();
-    const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
-    if (inViewport) {
-      setVisible(true);
-      return;
-    }
-    setVisible(false);
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-
-  return [ref, visible] as const;
+  return [ref, true] as const;
 }
