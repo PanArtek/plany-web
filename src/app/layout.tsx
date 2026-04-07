@@ -22,7 +22,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://plany.com.pl"),
   title: {
-    default: "PLANY — Fit-out i wykończenia komercyjne Warszawa",
+    default: "PLANY — Budowa wnętrz komercyjnych",
     template: "%s · PLANY",
   },
   description:
