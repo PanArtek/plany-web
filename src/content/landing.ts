@@ -213,6 +213,11 @@ export const PROJECTS = [
   },
 ] as const;
 
+export const PROCES_KICKER_LINES = [
+  "Wielkie PLANY",
+  "zaczynają się tu.",
+] as const;
+
 export const PROCES_TITLE_LINES = [
   "Twoje ryzyko maleje",
   "z każdym krokiem.",

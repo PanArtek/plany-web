@@ -10,6 +10,7 @@ import {
 import { useInView } from "@/lib/hooks/use-in-view";
 import {
   STEPS,
+  PROCES_KICKER_LINES,
   PROCES_TITLE_LINES,
   PROCES_INTRO,
   type StepIcon,
@@ -50,6 +51,20 @@ export function Proces() {
                 Proces
               </span>
             </div>
+            <p
+              className="font-display font-bold text-muted leading-[1.15] mb-3 transition-all duration-700"
+              style={{
+                fontSize: "clamp(18px,2.4vw,26px)",
+                letterSpacing: "-.02em",
+                opacity: vis ? 1 : 0,
+                transform: vis ? "translateY(0)" : "translateY(14px)",
+                transitionDelay: "180ms",
+              }}
+            >
+              {PROCES_KICKER_LINES[0]}
+              <br />
+              {PROCES_KICKER_LINES[1]}
+            </p>
             <h2
               className="font-display font-extrabold text-text leading-[1.05] transition-all duration-700"
               style={{
@@ -57,7 +72,7 @@ export function Proces() {
                 letterSpacing: "-.03em",
                 opacity: vis ? 1 : 0,
                 transform: vis ? "translateY(0)" : "translateY(14px)",
-                transitionDelay: "200ms",
+                transitionDelay: "260ms",
               }}
             >
               {PROCES_TITLE_LINES[0]}
