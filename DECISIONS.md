@@ -19,5 +19,15 @@
 | 15 | Filtry portfolio | Włącz dopiero przy ≥12 projektach |
 
 ## Otwarte pytania (do potwierdzenia w brainstorm)
-- Realne zdjęcia portfolio: kiedy dostarczę?
-- `.env.example` — Ralph wygeneruje na podstawie tego dokumentu
+- Realne zdjęcia portfolio: kiedy dostarczę? (odłożone do Fazy 2)
+
+## Decyzje brainstorm (2026-04-07)
+| # | Temat | Decyzja |
+|---|---|---|
+| B1 | DB layer | supabase-js only — drizzle/postgres usunięte z deps |
+| B2 | Styling | Tailwind 4 + design tokens (CSS vars) w globals.css, paleta Warm Sand |
+| B3 | Lead pipeline | Next Route Handler `/api/leads` zamiast Supabase Edge Function (override pkt 6 oryginalnej tabeli). Pipeline: zod parse → honeypot → in-memory rate limit (5/min/IP) → Turnstile verify → Resend |
+| B4 | Fonty | next/font: Newsreader 700/800 (preload) + Plus Jakarta Sans 300-600 (no preload), subset latin+latin-ext. Logo = SVG, font Rubik One nie ładowany |
+| B5 | MVP scope | Wąskie MVP — landing + form wysyła tylko mail. Supabase schema (`leads`, `projects`, storage, /admin) → Faza 2 |
+
+`.env.example` wygenerowane (Resend + Turnstile + puste Supabase placeholders).

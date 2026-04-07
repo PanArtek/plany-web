@@ -71,7 +71,14 @@ export async function POST(req: Request) {
   const cc = process.env.LEAD_CC;
 
   if (!apiKey || !from || !to) {
-    console.error("[leads] Resend env vars missing");
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "[leads] Resend env vars missing — dev fallback, lead logged only",
+        { name: lead.name, email: lead.email, type: lead.type },
+      );
+      return NextResponse.json({ ok: true, dev: true });
+    }
+    console.error("[leads] Resend env vars missing in production");
     return NextResponse.json(
       { ok: false, error: "Konfiguracja maila niepełna" },
       { status: 500 },
