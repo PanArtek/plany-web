@@ -18,7 +18,7 @@ export const HERO = {
   titleAccent: "PLANY",
   lead: "Budowa wnętrz komercyjnych — jeden zespół, jeden termin, pełna kontrola kosztów.",
   subLead: "Biura · Medycyna · Edukacja · Gastronomia · Retail · i inne",
-  ctaPrimary: "Porozmawiajmy",
+  ctaPrimary: "Szybka wycena",
   ctaSecondary: "Realizacje ↓",
   stats: [
     { v: "10+", l: "lat doświadczenia" },
