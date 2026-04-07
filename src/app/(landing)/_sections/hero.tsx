@@ -22,6 +22,7 @@ export function Hero() {
     <section
       id="hero"
       className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden"
+      style={{ paddingTop: "max(120px, 14vh)", paddingBottom: "180px" }}
     >
       <div className="grain" aria-hidden />
       <div
