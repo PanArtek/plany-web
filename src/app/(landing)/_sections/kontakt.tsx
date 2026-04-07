@@ -6,7 +6,7 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { Send, MapPin, Phone, Mail } from "lucide-react";
 import { useInView } from "@/lib/hooks/use-in-view";
 import { LeadSchema, type LeadInput } from "@/lib/schemas/lead";
-import { PTYPES, AREAS, CONTACT } from "@/content/landing";
+import { PTYPES, AREAS, CONTACT, KONTAKT_TITLE_LINES } from "@/content/landing";
 import { Logo } from "@/components/logo";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
@@ -42,9 +42,9 @@ export function Kontakt() {
               transitionDelay: "200ms",
             }}
           >
-            Porozmawiajmy
+            {KONTAKT_TITLE_LINES[0]}
             <br />
-            o projekcie.
+            {KONTAKT_TITLE_LINES[1]}
           </h2>
         </div>
 

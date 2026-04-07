@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useInView } from "@/lib/hooks/use-in-view";
-import { PROJECTS } from "@/content/landing";
+import { PROJECTS, REAL_TITLE } from "@/content/landing";
 
 const FILTERS = ["Wszystkie", "Biura", "Kliniki", "Edukacja", "Komercyjne"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -118,7 +118,7 @@ export function Realizacje() {
                 transitionDelay: "200ms",
               }}
             >
-              Nasze realizacje
+              {REAL_TITLE}
             </h2>
           </div>
           <div

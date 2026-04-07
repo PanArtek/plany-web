@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Logo } from "@/components/logo";
 import { HERO } from "@/content/landing";
 
 export function Hero() {
@@ -12,11 +11,6 @@ export function Hero() {
 
   const go = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-
-  const ani = (delay: number) =>
-    `transition-all duration-700 ${
-      loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-    }`.concat(` [transition-delay:${Math.round(delay * 1000)}ms]`);
 
   return (
     <section
@@ -44,38 +38,6 @@ export function Hero() {
       />
 
       <div className="relative z-2 section-pad-x max-w-[900px]">
-        <div
-          className={`flex items-center gap-0 mb-8 flex-wrap ${ani(0.2)}`}
-          style={{
-            transitionDelay: loaded ? "200ms" : "0ms",
-          }}
-        >
-          {HERO.eyebrow.map((w, i) => (
-            <div key={w} className="flex items-center">
-              {i > 0 && (
-                <div
-                  className="h-px bg-accent opacity-50"
-                  style={{
-                    width: "clamp(20px,3vw,40px)",
-                    margin: "0 clamp(8px,1.2vw,16px)",
-                  }}
-                  aria-hidden
-                />
-              )}
-              {w === "PLANY" ? (
-                <Logo size={22} color="#C4A97D" />
-              ) : (
-                <span
-                  className="font-sans font-normal text-dim uppercase tracking-wider"
-                  style={{ fontSize: "clamp(11px,1.1vw,13px)" }}
-                >
-                  {w}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
         <h1
           className="font-display font-extrabold text-text leading-[.9] tracking-tight mb-3 transition-all duration-700"
           style={{

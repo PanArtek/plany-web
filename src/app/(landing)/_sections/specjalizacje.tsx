@@ -1,20 +1,36 @@
 "use client";
 import {
   Building2,
-  HeartPulse,
   GraduationCap,
   UtensilsCrossed,
+  Stethoscope,
+  PawPrint,
+  Pill,
+  Users,
+  ShoppingBag,
+  Sparkles,
+  Dumbbell,
+  Scale,
+  BedDouble,
   ArrowRight,
   type LucideIcon,
 } from "lucide-react";
 import { useInView } from "@/lib/hooks/use-in-view";
-import { SPECS, type SpecIcon } from "@/content/landing";
+import { SPECS, SPEC_TITLE_LINES, type SpecIcon } from "@/content/landing";
 
 const ICONS: Record<SpecIcon, LucideIcon> = {
   Building2,
-  HeartPulse,
   GraduationCap,
   UtensilsCrossed,
+  Stethoscope,
+  PawPrint,
+  Pill,
+  Users,
+  ShoppingBag,
+  Sparkles,
+  Dumbbell,
+  Scale,
+  BedDouble,
 };
 
 function SectionLabel({ text, vis }: { text: string; vis: boolean }) {
@@ -69,15 +85,15 @@ export function Specjalizacje() {
         <div ref={ref} style={{ marginBottom: "clamp(40px,5vw,60px)" }}>
           <SectionLabel text="Specjalizacje" vis={vis} />
           <SectionTitle vis={vis}>
-            Cztery branże,
+            {SPEC_TITLE_LINES[0]}
             <br />
-            jeden standard.
+            {SPEC_TITLE_LINES[1]}
           </SectionTitle>
         </div>
 
         <div
           ref={ref2}
-          className="grid gap-3 md:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-3 md:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         >
           {SPECS.map((s, i) => {
             const Icon = ICONS[s.icon];

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { NAV_ITEMS } from "@/content/landing";
+import { NAV_ITEMS, NAV_EYEBROW } from "@/content/landing";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -31,10 +31,33 @@ export function Nav() {
     >
       <button
         onClick={() => go("hero")}
-        className="bg-transparent border-none cursor-pointer p-0 flex items-center text-text"
+        className="bg-transparent border-none cursor-pointer p-0 flex items-center gap-0 flex-nowrap text-text"
         aria-label="PLANY — strona główna"
       >
-        <Logo size={26} />
+        {NAV_EYEBROW.map((w, i) => (
+          <span key={w} className="flex items-center">
+            {i > 0 && (
+              <span
+                className="h-px bg-accent opacity-50"
+                style={{
+                  width: "clamp(10px,1.5vw,18px)",
+                  margin: "0 clamp(5px,.8vw,9px)",
+                }}
+                aria-hidden
+              />
+            )}
+            {w === "PLANY" ? (
+              <Logo size={20} color="#C4A97D" />
+            ) : (
+              <span
+                className="font-sans font-normal text-dim uppercase tracking-wider"
+                style={{ fontSize: "clamp(9px,1vw,11px)" }}
+              >
+                {w}
+              </span>
+            )}
+          </span>
+        ))}
       </button>
 
       {/* Desktop */}

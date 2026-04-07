@@ -10,8 +10,10 @@ export const NAV_ITEMS = [
   { label: "Kontakt", id: "kontakt" },
 ] as const;
 
+/** Eyebrow used inside Nav (logo button) */
+export const NAV_EYEBROW = ["Pomysł", "PLANY", "Przestrzeń"] as const;
+
 export const HERO = {
-  eyebrow: ["Projekt", "PLANY", "Przestrzeń"] as const,
   titleLine1: "Realizujemy",
   titleAccent: "PLANY",
   lead: "Budowa wnętrz komercyjnych — jeden zespół, jeden termin, pełna kontrola kosztów.",
@@ -25,54 +27,146 @@ export const HERO = {
   ],
 } as const;
 
+export const SPEC_TITLE_LINES = ["Każda branża", "ma swoje PLANY."] as const;
+
 export const SPECS = [
   {
-    icon: "Building2",
+    icon: "GraduationCap",
     tag: "01",
-    title: "Biura i przestrzenie komercyjne",
+    title: "Placówki oświatowe",
     pts: [
-      "Fit-out biur od 100 m² do 5000 m²",
-      "Generalny wykonawca i podwykonawca",
-      "Współpraca z deweloperami i korporacjami",
-      "Realizacje pod klucz — od projektu po odbiór",
+      "Realizacje dla operatorów szkół i przedszkoli prywatnych",
+      "Materiały atestowane, zgodne z wymaganiami dla obiektów dziecięcych",
+      "Prace prowadzone w przerwach semestralnych i wakacjach",
+      "Pełna dokumentacja techniczna i atestowa do odbioru",
     ],
   },
   {
-    icon: "HeartPulse",
+    icon: "Stethoscope",
     tag: "02",
-    title: "Kliniki medyczne",
+    title: "Kliniki stomatologiczne i medyczne",
     pts: [
-      "Gabinety dentystyczne, kliniki weterynaryjne",
-      "Zgodność z normami PN-HD 60364-7-710",
-      "Instalacje specjalistyczne — RTG, CT, HVAC",
-      "Ochrona radiologiczna i wentylacja sterylna",
+      "Portfel zrealizowanych obiektów medycznych",
+      "Instalacje pod sprzęt diagnostyczny i zabiegowy",
+      "Pełna zgodność z wymogami sanitarno-epidemiologicznymi",
+      "Koordynacja z projektantami branżowymi i inwestorem",
+    ],
+  },
+  {
+    icon: "PawPrint",
+    tag: "03",
+    title: "Kliniki weterynaryjne",
+    pts: [
+      "Realizacje gabinetów, lecznic i klinik z hospitalizacją",
+      "Instalacje pod tomografy i sprzęt diagnostyczny",
+      "Strefy hospitalizacji, zabiegowe i pomieszczenia czyste",
+      "Doświadczenie z sieciami weterynaryjnymi w Polsce",
+    ],
+  },
+  {
+    icon: "Pill",
+    tag: "04",
+    title: "Apteki",
+    pts: [
+      "Realizacje aptek otwartych i punktów aptecznych",
+      "Pomieszczenia recepturowe i magazynowe zgodne z prawem farmaceutycznym",
+      "Procedury odbiorowe Wojewódzkiego Inspektoratu Farmaceutycznego",
+      "Doświadczenie z sieciami i aptekami niezależnymi",
+    ],
+  },
+  {
+    icon: "Building2",
+    tag: "05",
+    title: "Biura i przestrzenie korporacyjne",
+    pts: [
+      "Realizacje od stu do pięciu tysięcy metrów kwadratowych",
+      "Generalne wykonawstwo lub wybrane branże",
+      "Stała obsługa funduszy i deweloperów komercyjnych",
+      "Harmonogram i budżet potwierdzone umową",
+    ],
+  },
+  {
+    icon: "Users",
+    tag: "06",
+    title: "Coworking i przestrzenie elastyczne",
+    pts: [
+      "Realizacje dla operatorów biur serwisowanych",
+      "Strefy ciche, pokoje rozmów i open space w jednym obiekcie",
+      "Instalacje pod elastyczne aranżacje i częste zmiany",
+      "Tempo dopasowane do harmonogramu komercjalizacji",
     ],
   },
   {
     icon: "UtensilsCrossed",
-    tag: "03",
+    tag: "07",
     title: "Lokale gastronomiczne",
     pts: [
-      "Restauracje, bary, food halle, kioski",
-      "Instalacje wod-kan, wentylacja kuchenna",
-      "Posadzki przemysłowe i okładziny",
-      "Odbiory sanepid i PPOŻ",
+      "Realizacje dla restauracji, kawiarni i food courtów",
+      "Zaplecze techniczne i część gościnna w jednym kontrakcie",
+      "Procedury odbiorowe sanepidu i straży pożarnej po naszej stronie",
+      "Tempo realizacji dopasowane do daty otwarcia",
     ],
   },
   {
-    icon: "GraduationCap",
-    tag: "04",
-    title: "Obiekty edukacyjne",
+    icon: "ShoppingBag",
+    tag: "08",
+    title: "Retail i sieci handlowe",
     pts: [
-      "Szkoły prywatne i przedszkola",
-      "Bezpieczeństwo pożarowe, normy WT",
-      "Ergonomia przestrzeni dla dzieci",
-      "Trwałe materiały odporne na eksploatację",
+      "Realizacje dla sieci handlowych i marek własnych",
+      "Wdrożenia zgodne ze standardami książek marki",
+      "Prace nocne, bez wpływu na funkcjonowanie centrum",
+      "Koordynacja z administracją galerii i najemcami",
+    ],
+  },
+  {
+    icon: "Sparkles",
+    tag: "09",
+    title: "Salony beauty i SPA",
+    pts: [
+      "Realizacje salonów kosmetycznych, fryzjerskich i obiektów SPA",
+      "Instalacje wod-kan, wentylacja i odpływy techniczne",
+      "Materiały odporne na wilgoć i środki dezynfekujące",
+      "Doświadczenie z sieciami i markami premium",
+    ],
+  },
+  {
+    icon: "Dumbbell",
+    tag: "10",
+    title: "Obiekty sportowe i fitness",
+    pts: [
+      "Realizacje siłowni, klubów fitness i studiów treningowych",
+      "Posadzki sportowe, wzmocnienia konstrukcyjne, akustyka",
+      "Instalacje wentylacyjne i klimatyzacyjne dużej wydajności",
+      "Doświadczenie z sieciami fitness i obiektami autorskimi",
+    ],
+  },
+  {
+    icon: "Scale",
+    tag: "11",
+    title: "Kancelarie i biura prawne",
+    pts: [
+      "Realizacje kancelarii prawnych, notarialnych i doradczych",
+      "Pokoje rozmów z izolacją akustyczną",
+      "Strefy reprezentacyjne i archiwa zgodne z wymaganiami",
+      "Wykończenia premium dopasowane do charakteru zawodu",
+    ],
+  },
+  {
+    icon: "BedDouble",
+    tag: "12",
+    title: "Hotele i apartamenty",
+    pts: [
+      "Realizacje hoteli, apart-hoteli i obiektów krótkiego najmu",
+      "Pokoje, lobby, restauracje i zaplecze w jednym kontrakcie",
+      "Koordynacja z operatorem i marką hotelową",
+      "Prace etapowe bez zamykania całego obiektu",
     ],
   },
 ] as const;
 
 export type SpecIcon = (typeof SPECS)[number]["icon"];
+
+export const REAL_TITLE = "Zrealizowane PLANY" as const;
 
 export const PROJECTS = [
   {
@@ -119,30 +213,49 @@ export const PROJECTS = [
   },
 ] as const;
 
+export const PROCES_TITLE_LINES = [
+  "Twoje ryzyko maleje",
+  "z każdym krokiem.",
+] as const;
+
+export const PROCES_INTRO =
+  "Pięć kroków, jeden zespół, jedna odpowiedzialność — od wyceny po serwis pogwarancyjny.";
+
 export const STEPS = [
   {
     n: "01",
-    icon: "MessageSquare",
-    t: "Konsultacja",
-    d: "Bezpłatna wizja lokalna, analiza potrzeb, wstępna wycena w 48h.",
+    icon: "Search",
+    t: "Weryfikacja zakresu i kosztu",
+    sub: "2–5 dni",
+    d: "Wizja lokalna, pomiary, kalkulacja. W 48h gotowa wycena rozbita pozycyjnie.",
   },
   {
     n: "02",
-    icon: "Ruler",
-    t: "Projekt",
-    d: "Harmonogram, kosztorys szczegółowy, dobór materiałów i podwykonawców.",
+    icon: "FileText",
+    t: "Zamknięty kosztorys i harmonogram",
+    sub: "5–10 dni",
+    d: "Wszystko ustalone, zanim ekipa wejdzie na budowę. Kosztorys pozycja po pozycji, harmonogram z datami, jasny zakres prac.",
   },
   {
     n: "03",
     icon: "HardHat",
-    t: "Realizacja",
-    d: "Własna ekipa 30 osób + sprawdzeni podwykonawcy. Nadzór dzienny.",
+    t: "Realizacja własnymi ekipami",
+    sub: "8–16 tyg.",
+    d: "30 osób na stałe, 10 elektryków, zintegrowani podwykonawcy z którymi pracujemy od lat. Na budowie zawsze kierownik z naszej strony — jeden człowiek, jedna odpowiedzialność.",
   },
   {
     n: "04",
     icon: "ClipboardCheck",
-    t: "Odbiór",
-    d: "Dokumentacja powykonawcza, protokoły, gwarancja i serwis.",
+    t: "Odbiór z dokumentacją",
+    sub: "1–3 dni",
+    d: "Dokumentacja powykonawcza, protokoły odbiorów, gwarancja. Komplet papierów do każdego urzędu, który będzie sprawdzał — Sanepid, straż pożarna, nadzór budowlany.",
+  },
+  {
+    n: "05",
+    icon: "LifeBuoy",
+    t: "Serwis gwarancyjny",
+    sub: "ciągłość",
+    d: "Serwis gwarancyjny i pogwarancyjny realizowany przez własny zespół techniczny. Czas reakcji 48h. Stałe warunki współpracy dla klientów wielolokalowych.",
   },
 ] as const;
 
@@ -170,6 +283,11 @@ export const AREAS = [
   "300–1000 m²",
   "1000–5000 m²",
   "> 5000 m²",
+] as const;
+
+export const KONTAKT_TITLE_LINES = [
+  "Opowiedz nam",
+  "swoje PLANY.",
 ] as const;
 
 export const CONTACT = {
