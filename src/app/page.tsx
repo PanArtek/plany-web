@@ -37,9 +37,9 @@ export default function Home() {
       <Nav />
       <main className="pb-20 md:pb-0">
         <Hero />
+        <Proces />
         <Specjalizacje />
         <Realizacje />
-        <Proces />
         <Stats />
         <Kontakt />
       </main>
