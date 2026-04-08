@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { FOOTER } from "@/content/landing";
+import { CookieSettingsLink } from "@/components/cookie-banner/CookieSettingsLink";
 
 export function Footer() {
   return (
@@ -14,10 +16,29 @@ export function Footer() {
         <span className="font-sans text-[11px] text-dim font-light">
           {FOOTER.copyright}
         </span>
-        <div className="flex gap-5 justify-center flex-wrap">
-          <span className="font-sans text-[10px] text-dim">{FOOTER.nip}</span>
-          <span className="font-sans text-[10px] text-dim">{FOOTER.regon}</span>
-          <span className="font-sans text-[10px] text-dim">{FOOTER.krs}</span>
+        <div className="flex flex-col gap-2 items-center md:items-start">
+          <div className="flex gap-5 justify-center md:justify-start flex-wrap">
+            <span className="font-sans text-[10px] text-dim">{FOOTER.nip}</span>
+            <span className="font-sans text-[10px] text-dim">
+              {FOOTER.regon}
+            </span>
+            <span className="font-sans text-[10px] text-dim">{FOOTER.krs}</span>
+          </div>
+          <div className="flex gap-5 justify-center md:justify-start flex-wrap">
+            <Link
+              href="/polityka-prywatnosci"
+              className="font-sans text-[10px] text-dim hover:text-accent uppercase tracking-wider no-underline transition-colors"
+            >
+              {FOOTER.privacyPolicy}
+            </Link>
+            <Link
+              href="/regulamin"
+              className="font-sans text-[10px] text-dim hover:text-accent uppercase tracking-wider no-underline transition-colors"
+            >
+              {FOOTER.terms}
+            </Link>
+            <CookieSettingsLink />
+          </div>
         </div>
         <a
           href="#hero"

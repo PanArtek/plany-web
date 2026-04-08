@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/LenisProvider";
+import { CookieBanner } from "@/components/cookie-banner/CookieBanner";
+import { AnalyticsGate } from "@/components/cookie-banner/AnalyticsGate";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -67,7 +68,8 @@ export default function RootLayout({
           Przejdź do treści
         </a>
         <LenisProvider>{children}</LenisProvider>
-        <Analytics />
+        <CookieBanner />
+        <AnalyticsGate />
       </body>
     </html>
   );

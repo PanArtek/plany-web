@@ -397,4 +397,17 @@ export const FOOTER = {
   nip: "NIP: 5253016152",
   regon: "REGON: 529591804",
   krs: "KRS: 0001125454",
+  privacyPolicy: "Polityka prywatności",
+  terms: "Regulamin",
+  cookieSettings: "Ustawienia cookies",
+} as const;
+
+export const COOKIE_CONSENT = {
+  storageKey: "plany_cookie_consent",
+  body: "Używamy plików cookie do podstawowego działania strony i analityki.",
+  learnMore: "Dowiedz się więcej",
+  policyHref: "/polityka-prywatnosci",
+  acceptAll: "Akceptuję",
+  essentialOnly: "Tylko niezbędne",
+  ariaLabel: "Ustawienia plików cookie",
 } as const;
