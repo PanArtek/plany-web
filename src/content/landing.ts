@@ -30,7 +30,6 @@ export const HERO = {
   stats: [
     { v: "10+", l: "lat doświadczenia" },
     { v: "35", l: "osób w zespole" },
-    { v: "100+", l: "zrealizowanych projektów" },
   ],
 } as const;
 
