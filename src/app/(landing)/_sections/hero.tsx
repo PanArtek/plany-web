@@ -220,8 +220,8 @@ export function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden"
-      style={{ paddingTop: "max(120px, 14vh)", paddingBottom: "clamp(160px, 22vh, 220px)" }}
+      className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden pb-10 md:pb-[clamp(160px,22vh,220px)]"
+      style={{ paddingTop: "max(110px, 13vh)" }}
     >
       {/* Background image — full bleed, all viewports */}
       <div
@@ -337,8 +337,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Stats bar */}
-      <div className="absolute bottom-0 inset-x-0 border-t border-line section-pad-x py-8 z-2">
+      {/* Stats bar — flow on mobile, absolute on md+ */}
+      <div className="relative md:absolute md:bottom-0 inset-x-0 border-t border-line section-pad-x py-6 md:py-8 z-2 mt-10 md:mt-0">
         <div
           className="grid max-w-[560px]"
           style={{
