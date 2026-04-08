@@ -288,7 +288,7 @@ export function Hero() {
         </h1>
 
         <p
-          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-3 transition-all duration-700"
+          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-3 whitespace-pre-line transition-all duration-700"
           style={{
             fontSize: "clamp(14px,1.6vw,17px)",
             opacity: loaded ? 1 : 0,
