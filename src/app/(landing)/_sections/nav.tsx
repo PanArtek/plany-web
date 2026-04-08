@@ -9,6 +9,7 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const eyebrowRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
@@ -16,6 +17,96 @@ export function Nav() {
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  // Eyebrow brand-narrative reveal on mount: Pomysł → line → PLANY → line → Przestrzeń.
+  useGSAP(
+    () => {
+      if (!eyebrowRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (ctx) => {
+          const { reduced } = ctx.conditions as {
+            motion: boolean;
+            reduced: boolean;
+          };
+          const root = eyebrowRef.current!;
+          const word1 = root.querySelector<HTMLElement>("[data-eb='word-1']");
+          const line1 = root.querySelector<HTMLElement>("[data-eb='line-1']");
+          const logo = root.querySelector<HTMLElement>("[data-eb='logo']");
+          const line2 = root.querySelector<HTMLElement>("[data-eb='line-2']");
+          const word2 = root.querySelector<HTMLElement>("[data-eb='word-2']");
+
+          const all = [word1, line1, logo, line2, word2].filter(
+            Boolean,
+          ) as HTMLElement[];
+          if (all.length === 0) return;
+
+          if (reduced) {
+            gsap.set(all, { opacity: 1, x: 0, scale: 1, scaleX: 1 });
+            return;
+          }
+
+          // Initial state
+          if (word1) gsap.set(word1, { opacity: 0, x: -8 });
+          if (line1)
+            gsap.set(line1, { scaleX: 0, transformOrigin: "left center" });
+          if (logo) gsap.set(logo, { opacity: 0, scale: 0.92 });
+          if (line2)
+            gsap.set(line2, { scaleX: 0, transformOrigin: "left center" });
+          if (word2) gsap.set(word2, { opacity: 0, x: 8 });
+
+          const tl = gsap.timeline({ delay: 0.2 });
+          if (word1)
+            tl.to(word1, {
+              opacity: 1,
+              x: 0,
+              duration: 0.45,
+              ease: "power3.out",
+            });
+          if (line1)
+            tl.to(
+              line1,
+              { scaleX: 1, duration: 0.35, ease: "power2.out" },
+              "-=0.2",
+            );
+          if (logo)
+            tl.to(
+              logo,
+              {
+                opacity: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: "power3.out",
+              },
+              "-=0.15",
+            );
+          if (line2)
+            tl.to(
+              line2,
+              { scaleX: 1, duration: 0.35, ease: "power2.out" },
+              "-=0.25",
+            );
+          if (word2)
+            tl.to(
+              word2,
+              {
+                opacity: 1,
+                x: 0,
+                duration: 0.45,
+                ease: "power3.out",
+              },
+              "-=0.2",
+            );
+        },
+      );
+      return () => mm.revert();
+    },
+    { scope: navRef },
+  );
 
   // Hide on scroll down, show on scroll up.
   useGSAP(
@@ -66,34 +157,47 @@ export function Nav() {
       style={{ height: 60 }}
     >
       <button
+        ref={eyebrowRef}
         onClick={() => go("hero")}
         className="bg-transparent border-none cursor-pointer p-0 flex items-center gap-0 flex-nowrap text-text"
         aria-label="PLANY — strona główna"
       >
-        {NAV_EYEBROW.map((w, i) => (
-          <span key={w} className="flex items-center">
-            {i > 0 && (
-              <span
-                className="h-px bg-accent opacity-50"
-                style={{
-                  width: "clamp(10px,1.5vw,18px)",
-                  margin: "0 clamp(5px,.8vw,9px)",
-                }}
-                aria-hidden
-              />
-            )}
-            {w === "PLANY" ? (
-              <Logo size={20} color="#C4A97D" />
-            ) : (
-              <span
-                className="font-sans font-normal text-dim uppercase tracking-wider"
-                style={{ fontSize: "clamp(9px,1vw,11px)" }}
-              >
-                {w}
-              </span>
-            )}
-          </span>
-        ))}
+        {NAV_EYEBROW.map((w, i) => {
+          const isLogo = w === "PLANY";
+          const wordIndex = isLogo ? 0 : i === 0 ? 1 : 2;
+          const lineIndex = i; // 1 or 2 (skipped for i===0)
+          return (
+            <span key={w} className="flex items-center">
+              {i > 0 && (
+                <span
+                  data-eb={`line-${lineIndex}`}
+                  className="h-px bg-accent opacity-50 will-change-transform"
+                  style={{
+                    width: "clamp(10px,1.5vw,18px)",
+                    margin: "0 clamp(5px,.8vw,9px)",
+                  }}
+                  aria-hidden
+                />
+              )}
+              {isLogo ? (
+                <span
+                  data-eb="logo"
+                  className="inline-flex will-change-transform"
+                >
+                  <Logo size={20} color="#C4A97D" />
+                </span>
+              ) : (
+                <span
+                  data-eb={`word-${wordIndex}`}
+                  className="font-sans font-normal text-dim uppercase tracking-wider will-change-transform"
+                  style={{ fontSize: "clamp(9px,1vw,11px)" }}
+                >
+                  {w}
+                </span>
+              )}
+            </span>
+          );
+        })}
       </button>
 
       {/* Desktop */}
