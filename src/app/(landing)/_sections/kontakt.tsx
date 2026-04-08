@@ -1,15 +1,11 @@
 "use client";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Send, MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { useScrollReveal } from "@/lib/animations/useScrollReveal";
-import { LeadSchema, type LeadInput } from "@/lib/schemas/lead";
-import { PTYPES, AREAS, CONTACT, KONTAKT_TITLE_LINES } from "@/content/landing";
+import { CONTACT, KONTAKT_TITLE_LINES } from "@/content/landing";
 import { Logo } from "@/components/logo";
-
-const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+import { QuizWizard } from "@/components/quiz/QuizWizard";
+import { PhoneTopBar } from "@/components/quiz/PhoneTopBar";
+import { PhoneCard } from "@/components/quiz/PhoneCard";
 
 export function Kontakt() {
   const ref = useScrollReveal<HTMLDivElement>({ stagger: 0.12 });
@@ -50,234 +46,17 @@ export function Kontakt() {
           className="grid gap-8 md:gap-12 lg:gap-16 grid-cols-1 lg:[grid-template-columns:1.15fr_.85fr]"
           data-reveal
         >
-          <ContactForm />
+          <div>
+            <PhoneTopBar />
+            <div className="mt-6">
+              <QuizWizard />
+            </div>
+            <PhoneCard />
+          </div>
           <ContactInfo />
         </div>
       </div>
     </section>
-  );
-}
-
-function Field({
-  label,
-  required,
-  error,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label
-        className={`font-sans text-[10px] uppercase tracking-wider transition-colors ${
-          error ? "text-error" : "text-dim"
-        }`}
-      >
-        {label}
-        {required && <span className="text-accent ml-0.5">*</span>}
-      </label>
-      {children}
-      {error && (
-        <span className="font-sans text-[11px] text-error font-light">
-          {error}
-        </span>
-      )}
-    </div>
-  );
-}
-
-function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [tsToken, setTsToken] = useState<string>("");
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LeadInput>({
-    resolver: standardSchemaResolver(LeadSchema),
-    defaultValues: {
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      type: "",
-      area: "",
-      msg: "",
-      website: "",
-      turnstileToken: "",
-    },
-  });
-
-  const onSubmit = async (data: LeadInput) => {
-    setSubmitError(null);
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...data, turnstileToken: tsToken }),
-      });
-      const json = (await res.json()) as { ok: boolean; error?: string };
-      if (!res.ok || !json.ok) {
-        setSubmitError(json.error || "Wystąpił błąd. Spróbuj ponownie.");
-        return;
-      }
-      setSent(true);
-    } catch {
-      setSubmitError("Brak połączenia. Spróbuj ponownie.");
-    }
-  };
-
-  if (sent) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3.5 py-14 px-5 text-center">
-        <div className="w-11 h-11 rounded-full bg-accent/10 flex items-center justify-center">
-          <Send size={17} strokeWidth={1.5} className="text-accent" />
-        </div>
-        <h3 className="font-display font-bold text-[20px] text-text">
-          Zapytanie wysłane
-        </h3>
-        <p className="font-sans text-[13px] text-muted font-light">
-          Odpowiemy w ciągu 24h w dni robocze.
-        </p>
-      </div>
-    );
-  }
-
-  const inputCls =
-    "font-sans text-[13px] text-text bg-input-bg border border-line px-3.5 py-3 w-full outline-none focus:border-accent transition-colors placeholder:text-dim min-h-11";
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4.5">
-      {/* Honeypot (hidden) */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: "-10000px",
-          width: 1,
-          height: 1,
-          overflow: "hidden",
-        }}
-      >
-        <label>
-          Website
-          <input
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            {...register("website")}
-          />
-        </label>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        <Field label="Imię i nazwisko" required error={errors.name?.message}>
-          <input
-            type="text"
-            placeholder="Jan Kowalski"
-            className={inputCls}
-            {...register("name")}
-          />
-        </Field>
-        <Field label="Firma">
-          <input
-            type="text"
-            placeholder="Opcjonalne"
-            className={inputCls}
-            {...register("company")}
-          />
-        </Field>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        <Field label="Email" required error={errors.email?.message}>
-          <input
-            type="email"
-            placeholder="jan@firma.pl"
-            className={inputCls}
-            {...register("email")}
-          />
-        </Field>
-        <Field label="Telefon" required error={errors.phone?.message}>
-          <input
-            type="tel"
-            placeholder="+48 ..."
-            className={inputCls}
-            {...register("phone")}
-          />
-        </Field>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        <Field label="Typ projektu" required error={errors.type?.message}>
-          <select className={inputCls} defaultValue="" {...register("type")}>
-            <option value="" disabled hidden>
-              Wybierz...
-            </option>
-            {PTYPES.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field label="Metraż">
-          <select className={inputCls} defaultValue="" {...register("area")}>
-            <option value="" disabled hidden>
-              Wybierz...
-            </option>
-            {AREAS.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        </Field>
-      </div>
-
-      <Field label="Wiadomość">
-        <textarea
-          rows={4}
-          placeholder="Opisz projekt..."
-          className={`${inputCls} resize-y min-h-[90px]`}
-          {...register("msg")}
-        />
-      </Field>
-
-      {SITE_KEY ? (
-        <Turnstile
-          siteKey={SITE_KEY}
-          onSuccess={setTsToken}
-          options={{ theme: "dark" }}
-        />
-      ) : (
-        <p className="font-sans text-[11px] text-dim">
-          (Turnstile wyłączony — brak <code>NEXT_PUBLIC_TURNSTILE_SITE_KEY</code>)
-        </p>
-      )}
-
-      {submitError && (
-        <p className="font-sans text-[12px] text-error">{submitError}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="font-sans text-[12px] font-medium uppercase tracking-wider px-7 py-3.5 bg-accent hover:bg-accent-hover disabled:bg-dim disabled:cursor-wait text-white border-none cursor-pointer transition-colors flex items-center justify-center gap-2.5 w-full min-h-11"
-      >
-        {isSubmitting ? "Wysyłanie..." : "Wyślij zapytanie"}
-        {!isSubmitting && <Send size={13} strokeWidth={2} />}
-      </button>
-
-      <p className="font-sans text-[11px] text-dim font-light">
-        Odpowiadamy w ciągu 24h. Twoje dane nie będą udostępniane.
-      </p>
-    </form>
   );
 }
 

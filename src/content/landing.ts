@@ -279,23 +279,6 @@ export const STATS = [
   { end: 10, sfx: "M", unit: "PLN", lbl: "wartość projektu" },
 ] as const;
 
-export const PTYPES = [
-  "Biuro",
-  "Klinika dentystyczna",
-  "Klinika weterynaryjna",
-  "Szkoła / przedszkole",
-  "Gastronomia",
-  "Inne",
-] as const;
-
-export const AREAS = [
-  "< 100 m²",
-  "100–300 m²",
-  "300–1000 m²",
-  "1000–5000 m²",
-  "> 5000 m²",
-] as const;
-
 export const KONTAKT_TITLE_LINES = [
   "Opowiedz nam",
   "swoje PLANY.",
@@ -303,12 +286,82 @@ export const KONTAKT_TITLE_LINES = [
 
 export const CONTACT = {
   address: "Warszawa, dzielnica Wawer",
-  phone: "+48 XXX XXX XXX",
-  phoneTel: "+48000000000",
+  phone: "+48 511 222 252",
+  phoneE164: "+48511222252",
+  phoneOwner: "Łukasz",
   email: "biuro@plany.com.pl",
   description:
     "Fit-out komercyjny — biura, kliniki, szkoły. Od konsultacji po klucz.",
 } as const;
+
+export const QUIZ = {
+  topBar: {
+    prefix: "Nie chcesz klikać?",
+    cta: "Zadzwoń do",
+  },
+  card: {
+    separator: "albo prościej",
+    title: "Zadzwoń do",
+    note: "10 minut rozmowy zastąpi cały ten quiz",
+  },
+  back: "Wstecz",
+  progressLabel: "Postęp quizu",
+  steps: {
+    industry: {
+      title: "Jaka branża?",
+      eyebrow: "Krok 1 z 4",
+    },
+    area: {
+      title: "Jaki metraż?",
+      eyebrow: "Krok 2 z 4",
+    },
+    timeline: {
+      title: "Kiedy ruszamy?",
+      eyebrow: "Krok 3 z 4",
+    },
+    email: {
+      title: "Twój email",
+      eyebrow: "Krok 4 z 4",
+      placeholder: "jan@firma.pl",
+      submit: "Wyślij zapytanie",
+      submitting: "Wysyłanie...",
+      note: "Odpowiemy w ciągu 24h w dni robocze.",
+    },
+  },
+  industries: [
+    { id: "biuro", icon: "Building2", label: "Biuro" },
+    { id: "klinika", icon: "Stethoscope", label: "Klinika", sub: "dent / wet / med" },
+    { id: "szkola", icon: "GraduationCap", label: "Szkoła / przedszkole" },
+    { id: "gastro", icon: "UtensilsCrossed", label: "Gastronomia" },
+    { id: "inne", icon: "MoreHorizontal", label: "Inne" },
+  ] as const,
+  areas: [
+    { id: "do100", label: "do 100 m²", sub: "powierzchnia użytkowa" },
+    { id: "100-300", label: "100 – 300 m²", sub: "powierzchnia użytkowa" },
+    { id: "300-1000", label: "300 – 1000 m²", sub: "powierzchnia użytkowa" },
+    { id: "1000plus", label: "powyżej 1000 m²", sub: "powierzchnia użytkowa" },
+  ] as const,
+  timelines: [
+    { id: "asap", label: "ASAP", sub: "do miesiąca" },
+    { id: "3mc", label: "W ciągu 3 miesięcy" },
+    { id: "later", label: "Później" },
+    { id: "unknown", label: "Jeszcze nie wiem" },
+  ] as const,
+  success: {
+    title: "Dzięki!",
+    body: "Zapytanie dotarło. Odpowiemy w ciągu 24h w dni robocze na",
+    phoneCta: "Pilne? Zadzwoń do",
+    reset: "Wyślij kolejne",
+  },
+  error: {
+    generic: "Coś poszło nie tak. Spróbuj jeszcze raz albo zadzwoń.",
+    retry: "Spróbuj ponownie",
+  },
+} as const;
+
+export type QuizIndustryId = (typeof QUIZ.industries)[number]["id"];
+export type QuizAreaId = (typeof QUIZ.areas)[number]["id"];
+export type QuizTimelineId = (typeof QUIZ.timelines)[number]["id"];
 
 export const FOOTER = {
   copyright: "© 2026 PLANY Sp. z o.o.",

@@ -8,7 +8,7 @@ import { CONTACT } from "@/content/landing";
 export function StickyCallCTA() {
   return (
     <a
-      href={`tel:${CONTACT.phoneTel}`}
+      href={`tel:${CONTACT.phoneE164}`}
       className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center gap-2 bg-accent text-bg font-medium uppercase tracking-wider text-sm py-4 border-t border-accent-hover"
       style={{
         paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",

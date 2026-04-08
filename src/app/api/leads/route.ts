@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { LeadSchema } from "@/lib/schemas/lead";
+import { QuizLeadSchema } from "@/lib/schemas/lead";
+import { INDUSTRY_LABELS } from "@/lib/quiz-labels";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { rateLimit, maybeCleanup } from "@/lib/rate-limit";
 import { leadEmailHtml, leadEmailSubject } from "@/lib/email/lead-template";
@@ -43,10 +44,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const parsed = LeadSchema.safeParse(body);
+  const parsed = QuizLeadSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { ok: false, error: "Nieprawidłowe dane formularza" },
+      { ok: false, error: "Nieprawidłowe dane quizu" },
       { status: 400 },
     );
   }
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true }); // pretend success
   }
 
-  const turnstileOk = await verifyTurnstile(lead.turnstileToken, ip);
+  const turnstileOk = await verifyTurnstile(lead.turnstileToken ?? "", ip);
   if (!turnstileOk) {
     return NextResponse.json(
       { ok: false, error: "Weryfikacja antyspamowa nie powiodła się" },
@@ -74,7 +75,12 @@ export async function POST(req: Request) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
         "[leads] Resend env vars missing — dev fallback, lead logged only",
-        { name: lead.name, email: lead.email, type: lead.type },
+        {
+          email: lead.email,
+          industry: INDUSTRY_LABELS[lead.industry],
+          area: lead.area,
+          timeline: lead.timeline,
+        },
       );
       return NextResponse.json({ ok: true, dev: true });
     }
