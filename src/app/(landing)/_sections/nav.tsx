@@ -59,19 +59,19 @@ export function Nav() {
             gsap.set(line2, { scaleX: 0, transformOrigin: "left center" });
           if (word2) gsap.set(word2, { opacity: 0, x: 8 });
 
-          const tl = gsap.timeline({ delay: 0.2 });
+          const tl = gsap.timeline({ delay: 0.4 });
           if (word1)
             tl.to(word1, {
               opacity: 1,
               x: 0,
-              duration: 0.45,
+              duration: 0.9,
               ease: "power3.out",
             });
           if (line1)
             tl.to(
               line1,
-              { scaleX: 1, duration: 0.35, ease: "power2.out" },
-              "-=0.2",
+              { scaleX: 1, duration: 0.7, ease: "power2.out" },
+              "+=0.1",
             );
           if (logo)
             tl.to(
@@ -79,16 +79,16 @@ export function Nav() {
               {
                 opacity: 1,
                 scale: 1,
-                duration: 0.5,
+                duration: 0.95,
                 ease: "power3.out",
               },
-              "-=0.15",
+              "+=0.1",
             );
           if (line2)
             tl.to(
               line2,
-              { scaleX: 1, duration: 0.35, ease: "power2.out" },
-              "-=0.25",
+              { scaleX: 1, duration: 0.7, ease: "power2.out" },
+              "+=0.1",
             );
           if (word2)
             tl.to(
@@ -96,10 +96,10 @@ export function Nav() {
               {
                 opacity: 1,
                 x: 0,
-                duration: 0.45,
+                duration: 0.9,
                 ease: "power3.out",
               },
-              "-=0.2",
+              "+=0.1",
             );
         },
       );
