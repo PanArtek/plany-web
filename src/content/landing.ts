@@ -26,7 +26,7 @@ export const HERO = {
     "Inne +",
   ] as const,
   ctaPrimary: "Szybka wycena",
-  ctaSecondary: "Realizacje ↓",
+  ctaSecondary: "Realizacje",
   stats: [
     { v: "10+", l: "lat doświadczenia" },
     { v: "35+", l: "osób w zespole" },

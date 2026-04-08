@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ArrowRight, ArrowDown } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsapConfig";
 import { SpecializationsRotator } from "@/components/SpecializationsRotator";
 import { HERO } from "@/content/landing";
@@ -311,7 +312,7 @@ export function Hero() {
         </div>
 
         <div
-          className="flex flex-wrap items-center gap-4 sm:gap-6 transition-all duration-700"
+          className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 transition-all duration-700"
           style={{
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
@@ -321,15 +322,17 @@ export function Hero() {
           <button
             ref={ctaRef}
             onClick={() => go("kontakt")}
-            className="font-sans text-[12px] font-medium uppercase tracking-wider px-6 sm:px-8 py-4 bg-accent text-white border-none cursor-pointer hover:bg-accent-hover transition-colors min-h-11 will-change-transform"
+            className="inline-flex items-center justify-center gap-2.5 font-sans text-[13px] font-medium uppercase tracking-wider px-7 py-4 bg-accent text-white border border-accent cursor-pointer hover:bg-accent-hover hover:border-accent-hover transition-colors min-h-12 w-full sm:w-auto will-change-transform"
           >
             {HERO.ctaPrimary}
+            <ArrowRight size={15} strokeWidth={2.25} />
           </button>
           <button
             onClick={() => go("real")}
-            className="bg-transparent border-none cursor-pointer font-sans text-[12px] text-dim hover:text-muted transition-colors"
+            className="inline-flex items-center justify-center gap-2.5 font-sans text-[13px] font-medium uppercase tracking-wider px-7 py-4 bg-transparent text-text border border-accent cursor-pointer hover:bg-accent/10 hover:border-accent-hover transition-colors min-h-12 w-full sm:w-auto"
           >
             {HERO.ctaSecondary}
+            <ArrowDown size={15} strokeWidth={2.25} />
           </button>
         </div>
       </div>
