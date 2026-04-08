@@ -93,13 +93,13 @@ export function Hero() {
           }
           gsap.fromTo(
             heroImageRef.current,
-            { opacity: 0, scale: 1.04 },
+            { opacity: 0, scale: 1.06 },
             {
               opacity: 1,
               scale: 1,
-              duration: 1.2,
-              ease: "power3.out",
-              delay: 0.85,
+              duration: 1.6,
+              ease: "power2.out",
+              delay: 0.2,
             },
           );
         },
@@ -221,17 +221,33 @@ export function Hero() {
       className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden"
       style={{ paddingTop: "max(120px, 14vh)", paddingBottom: "clamp(160px, 22vh, 220px)" }}
     >
-      <div className="grain" aria-hidden />
+      {/* Background image — full bleed, all viewports */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        ref={heroImageRef}
+        className="absolute inset-0 z-0 will-change-transform"
+        aria-hidden
+      >
+        <Image
+          src="/hero/realization-edukacja.png"
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover object-center"
+        />
+      </div>
+      {/* Strong dark overlay for text legibility (Warm Sand tint) */}
+      <div
+        className="absolute inset-0 z-1 pointer-events-none"
         aria-hidden
         style={{
           background:
-            "radial-gradient(ellipse 80% 60% at 70% 40%,rgba(13,11,9,.9) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 20% 80%,rgba(196,169,125,.04) 0%,transparent 60%)",
+            "linear-gradient(180deg, rgba(13,11,9,0.78) 0%, rgba(13,11,9,0.62) 40%, rgba(13,11,9,0.85) 100%), radial-gradient(ellipse 70% 60% at 25% 50%, rgba(13,11,9,0.55) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 70%, rgba(196,169,125,0.06) 0%, transparent 60%)",
         }}
       />
+      <div className="grain" aria-hidden />
       <div
-        className="absolute inset-0 pointer-events-none opacity-[.025]"
+        className="absolute inset-0 z-1 pointer-events-none opacity-[.025]"
         aria-hidden
         style={{
           backgroundImage:
@@ -240,12 +256,7 @@ export function Hero() {
         }}
       />
 
-      <div
-        className="relative z-2 section-pad-x w-full mx-auto"
-        style={{ maxWidth: "var(--container-max)" }}
-      >
-        <div className="flex flex-col md:flex-row md:items-center md:gap-10 lg:gap-16">
-          <div className="md:flex-1 max-w-[640px]">
+      <div className="relative z-2 section-pad-x max-w-[900px]">
         <h1
           className="font-display font-extrabold text-text leading-[.9] tracking-tight mb-3"
           style={{
@@ -320,36 +331,6 @@ export function Hero() {
           >
             {HERO.ctaSecondary}
           </button>
-        </div>
-          </div>
-
-          {/* Hero image — desktop/tablet only */}
-          <div
-            ref={heroImageRef}
-            className="hidden md:block md:w-[42%] lg:w-[46%] relative aspect-[4/3] overflow-hidden border border-line bg-bg-alt mt-8 md:mt-0 will-change-transform"
-            style={{ opacity: 0 }}
-          >
-            <Image
-              src="/hero/realization-edukacja.png"
-              alt="Realizacja PLANY — placówka edukacyjna z autorskim muralem"
-              fill
-              sizes="(min-width: 1024px) 46vw, (min-width: 768px) 42vw, 0px"
-              priority
-              className="object-cover"
-            />
-            <div
-              className="absolute inset-0 pointer-events-none"
-              aria-hidden
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(13,11,9,0.35) 0%, rgba(13,11,9,0.05) 50%, rgba(196,169,125,0.08) 100%)",
-              }}
-            />
-            <div
-              className="absolute top-0 left-0 right-0 h-[2px] bg-accent/60"
-              aria-hidden
-            />
-          </div>
         </div>
       </div>
 
