@@ -81,10 +81,10 @@ export function SpecializationsRotator({
       aria-label="Nasze specjalizacje"
       className={`flex flex-wrap items-center gap-x-2 gap-y-1 ${className}`}
       style={{
-        fontSize: "clamp(32px, 5vw, 56px)",
-        fontWeight: 600,
-        letterSpacing: "-0.02em",
-        lineHeight: 1.15,
+        fontSize: "clamp(13px, 1.4vw, 16px)",
+        fontWeight: 500,
+        letterSpacing: "-0.005em",
+        lineHeight: 1.4,
       }}
     >
       {items.map((word, i) => (

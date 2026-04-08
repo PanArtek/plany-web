@@ -287,28 +287,28 @@ export function Hero() {
           </span>
         </h1>
 
-        <div
-          className="mb-5 transition-all duration-700"
-          style={{
-            opacity: loaded ? 1 : 0,
-            transform: loaded ? "translateY(0)" : "translateY(18px)",
-            transitionDelay: loaded ? "700ms" : "0ms",
-          }}
-        >
-          <SpecializationsRotator items={HERO.specRotator} intervalMs={1000} />
-        </div>
-
         <p
-          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-10 transition-all duration-700"
+          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-3 transition-all duration-700"
           style={{
             fontSize: "clamp(14px,1.6vw,17px)",
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? "translateY(0)" : "translateY(18px)",
+            transitionDelay: loaded ? "750ms" : "0ms",
+          }}
+        >
+          {HERO.lead}
+        </p>
+
+        <div
+          className="mb-10 transition-all duration-700"
+          style={{
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
             transitionDelay: loaded ? "800ms" : "0ms",
           }}
         >
-          {HERO.lead}
-        </p>
+          <SpecializationsRotator items={HERO.specRotator} intervalMs={1000} />
+        </div>
 
         <div
           className="flex flex-wrap items-center gap-4 sm:gap-6 transition-all duration-700"
