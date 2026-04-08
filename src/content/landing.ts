@@ -307,45 +307,63 @@ export const QUIZ = {
   back: "Wstecz",
   progressLabel: "Postęp quizu",
   steps: {
-    industry: {
-      title: "Jaka branża?",
-      eyebrow: "Krok 1 z 4",
-    },
     area: {
       title: "Jaki metraż?",
-      eyebrow: "Krok 2 z 4",
+      eyebrow: "Krok 1 z 6",
     },
-    timeline: {
-      title: "Kiedy ruszamy?",
-      eyebrow: "Krok 3 z 4",
+    industry: {
+      title: "Branża?",
+      eyebrow: "Krok 2 z 6",
+    },
+    condition: {
+      title: "Stan wejściowy?",
+      eyebrow: "Krok 3 z 6",
+    },
+    standard: {
+      title: "Standard wykończenia?",
+      eyebrow: "Krok 4 z 6",
+    },
+    location: {
+      title: "Gdzie?",
+      eyebrow: "Krok 5 z 6",
     },
     email: {
       title: "Twój email",
-      eyebrow: "Krok 4 z 4",
+      eyebrow: "Krok 6 z 6",
       placeholder: "jan@firma.pl",
       submit: "Wyślij zapytanie",
       submitting: "Wysyłanie...",
       note: "Odpowiemy w ciągu 24h w dni robocze.",
     },
   },
-  industries: [
-    { id: "biuro", icon: "Building2", label: "Biuro" },
-    { id: "klinika", icon: "Stethoscope", label: "Klinika", sub: "dent / wet / med" },
-    { id: "szkola", icon: "GraduationCap", label: "Szkoła / przedszkole" },
-    { id: "gastro", icon: "UtensilsCrossed", label: "Gastronomia" },
-    { id: "inne", icon: "MoreHorizontal", label: "Inne" },
-  ] as const,
   areas: [
     { id: "do100", label: "do 100 m²", sub: "powierzchnia użytkowa" },
     { id: "100-300", label: "100 – 300 m²", sub: "powierzchnia użytkowa" },
     { id: "300-1000", label: "300 – 1000 m²", sub: "powierzchnia użytkowa" },
     { id: "1000plus", label: "powyżej 1000 m²", sub: "powierzchnia użytkowa" },
   ] as const,
-  timelines: [
-    { id: "asap", label: "ASAP", sub: "do miesiąca" },
-    { id: "3mc", label: "W ciągu 3 miesięcy" },
-    { id: "later", label: "Później" },
-    { id: "unknown", label: "Jeszcze nie wiem" },
+  industries: [
+    { id: "medyczna", icon: "Stethoscope", label: "Medyczna", sub: "dent / wet / med" },
+    { id: "edukacja", icon: "GraduationCap", label: "Edukacja" },
+    { id: "gastro", icon: "UtensilsCrossed", label: "Gastronomia" },
+    { id: "retail", icon: "ShoppingBag", label: "Retail" },
+    { id: "biuro", icon: "Building2", label: "Biuro" },
+    { id: "inne", icon: "MoreHorizontal", label: "Inne" },
+  ] as const,
+  conditions: [
+    { id: "surowy", label: "Surowy / shell & core" },
+    { id: "po-najemcy", label: "Po poprzednim najemcy" },
+    { id: "remont", label: "Do remontu generalnego" },
+  ] as const,
+  standards: [
+    { id: "funkcjonalny", label: "Funkcjonalny" },
+    { id: "standardowy", label: "Standardowy" },
+    { id: "premium", label: "Premium" },
+  ] as const,
+  locations: [
+    { id: "warszawa", label: "Warszawa" },
+    { id: "mazowsze", label: "Mazowsze", sub: "do 50 km od Warszawy" },
+    { id: "polska", label: "Reszta Polski" },
   ] as const,
   success: {
     title: "Dzięki!",
@@ -359,9 +377,11 @@ export const QUIZ = {
   },
 } as const;
 
-export type QuizIndustryId = (typeof QUIZ.industries)[number]["id"];
 export type QuizAreaId = (typeof QUIZ.areas)[number]["id"];
-export type QuizTimelineId = (typeof QUIZ.timelines)[number]["id"];
+export type QuizIndustryId = (typeof QUIZ.industries)[number]["id"];
+export type QuizConditionId = (typeof QUIZ.conditions)[number]["id"];
+export type QuizStandardId = (typeof QUIZ.standards)[number]["id"];
+export type QuizLocationId = (typeof QUIZ.locations)[number]["id"];
 
 export const FOOTER = {
   copyright: "© 2026 PLANY Sp. z o.o.",

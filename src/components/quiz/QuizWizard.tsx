@@ -5,6 +5,7 @@ import {
   Stethoscope,
   GraduationCap,
   UtensilsCrossed,
+  ShoppingBag,
   MoreHorizontal,
   ArrowLeft,
   Send,
@@ -14,9 +15,11 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { gsap, useGSAP } from "@/lib/gsapConfig";
 import {
   QUIZ,
-  type QuizIndustryId,
   type QuizAreaId,
-  type QuizTimelineId,
+  type QuizIndustryId,
+  type QuizConditionId,
+  type QuizStandardId,
+  type QuizLocationId,
 } from "@/content/landing";
 import { QuizProgress } from "./QuizProgress";
 import { QuizOption } from "./QuizOption";
@@ -29,6 +32,7 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   Stethoscope,
   GraduationCap,
   UtensilsCrossed,
+  ShoppingBag,
   MoreHorizontal,
 };
 
@@ -37,18 +41,22 @@ type Phase =
   | "step-2"
   | "step-3"
   | "step-4"
+  | "step-5"
+  | "step-6"
   | "submitting"
   | "success"
   | "error";
 
 type Answers = {
-  industry?: QuizIndustryId;
   area?: QuizAreaId;
-  timeline?: QuizTimelineId;
+  industry?: QuizIndustryId;
+  condition?: QuizConditionId;
+  standard?: QuizStandardId;
+  location?: QuizLocationId;
   email?: string;
 };
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 6;
 
 function phaseToStep(phase: Phase): number {
   switch (phase) {
@@ -59,11 +67,14 @@ function phaseToStep(phase: Phase): number {
     case "step-3":
       return 3;
     case "step-4":
+      return 4;
+    case "step-5":
+      return 5;
+    case "step-6":
     case "submitting":
     case "error":
-      return 4;
     case "success":
-      return 4;
+      return 6;
   }
 }
 
@@ -77,7 +88,7 @@ export function QuizWizard() {
 
   const stepRef = useRef<HTMLDivElement>(null);
   const liveRef = useRef<HTMLDivElement>(null);
-  const directionRef = useRef<1 | -1>(1); // 1 = forward, -1 = back
+  const directionRef = useRef<1 | -1>(1);
   const previousPhaseRef = useRef<Phase>(phase);
 
   // Animate step transition.
@@ -116,10 +127,12 @@ export function QuizWizard() {
   useEffect(() => {
     if (!liveRef.current) return;
     const labels: Record<Phase, string> = {
-      "step-1": `${QUIZ.steps.industry.eyebrow}: ${QUIZ.steps.industry.title}`,
-      "step-2": `${QUIZ.steps.area.eyebrow}: ${QUIZ.steps.area.title}`,
-      "step-3": `${QUIZ.steps.timeline.eyebrow}: ${QUIZ.steps.timeline.title}`,
-      "step-4": `${QUIZ.steps.email.eyebrow}: ${QUIZ.steps.email.title}`,
+      "step-1": `${QUIZ.steps.area.eyebrow}: ${QUIZ.steps.area.title}`,
+      "step-2": `${QUIZ.steps.industry.eyebrow}: ${QUIZ.steps.industry.title}`,
+      "step-3": `${QUIZ.steps.condition.eyebrow}: ${QUIZ.steps.condition.title}`,
+      "step-4": `${QUIZ.steps.standard.eyebrow}: ${QUIZ.steps.standard.title}`,
+      "step-5": `${QUIZ.steps.location.eyebrow}: ${QUIZ.steps.location.title}`,
+      "step-6": `${QUIZ.steps.email.eyebrow}: ${QUIZ.steps.email.title}`,
       submitting: "Wysyłanie...",
       error: QUIZ.error.generic,
       success: QUIZ.success.title,
@@ -127,7 +140,7 @@ export function QuizWizard() {
     liveRef.current.textContent = labels[phase];
   }, [phase]);
 
-  // Focus management — focus first interactive element on each step change.
+  // Focus management.
   useEffect(() => {
     if (!stepRef.current) return;
     if (previousPhaseRef.current === phase) return;
@@ -142,24 +155,31 @@ export function QuizWizard() {
     directionRef.current = 1;
     setPhase(next);
   }
-
   function back(prev: Phase) {
     directionRef.current = -1;
     setPhase(prev);
   }
 
-  function selectIndustry(id: QuizIndustryId) {
-    setAnswers((a) => ({ ...a, industry: id }));
-    advance("step-2");
-  }
-  function selectArea(id: QuizAreaId) {
+  const selectArea = (id: QuizAreaId) => {
     setAnswers((a) => ({ ...a, area: id }));
+    advance("step-2");
+  };
+  const selectIndustry = (id: QuizIndustryId) => {
+    setAnswers((a) => ({ ...a, industry: id }));
     advance("step-3");
-  }
-  function selectTimeline(id: QuizTimelineId) {
-    setAnswers((a) => ({ ...a, timeline: id }));
+  };
+  const selectCondition = (id: QuizConditionId) => {
+    setAnswers((a) => ({ ...a, condition: id }));
     advance("step-4");
-  }
+  };
+  const selectStandard = (id: QuizStandardId) => {
+    setAnswers((a) => ({ ...a, standard: id }));
+    advance("step-5");
+  };
+  const selectLocation = (id: QuizLocationId) => {
+    setAnswers((a) => ({ ...a, location: id }));
+    advance("step-6");
+  };
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -170,7 +190,13 @@ export function QuizWizard() {
       setEmailError("Nieprawidłowy email");
       return;
     }
-    if (!answers.industry || !answers.area || !answers.timeline) {
+    if (
+      !answers.area ||
+      !answers.industry ||
+      !answers.condition ||
+      !answers.standard ||
+      !answers.location
+    ) {
       setSubmitError(QUIZ.error.generic);
       return;
     }
@@ -180,9 +206,11 @@ export function QuizWizard() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          industry: answers.industry,
           area: answers.area,
-          timeline: answers.timeline,
+          industry: answers.industry,
+          condition: answers.condition,
+          standard: answers.standard,
+          location: answers.location,
           email,
           turnstileToken: tsToken,
           website: "",
@@ -217,7 +245,6 @@ export function QuizWizard() {
 
   return (
     <div className="bg-bg-alt border border-line p-6 sm:p-8 lg:p-10">
-      {/* aria-live announcer */}
       <div ref={liveRef} className="sr-only" aria-live="polite" />
 
       {showProgress && (
@@ -230,36 +257,73 @@ export function QuizWizard() {
         </div>
       )}
 
-      <div ref={stepRef} className="min-h-[320px]">
+      <div ref={stepRef} className="min-h-[340px]">
         {phase === "step-1" && (
-          <Step1
-            selected={answers.industry}
-            onSelect={selectIndustry}
+          <OptionStep
+            eyebrow={QUIZ.steps.area.eyebrow}
+            title={QUIZ.steps.area.title}
+            options={QUIZ.areas}
+            selected={answers.area}
+            onSelect={selectArea}
+            cols={2}
           />
         )}
         {phase === "step-2" && (
-          <Step2
-            selected={answers.area}
-            onSelect={selectArea}
+          <OptionStep
+            eyebrow={QUIZ.steps.industry.eyebrow}
+            title={QUIZ.steps.industry.title}
+            options={QUIZ.industries}
+            selected={answers.industry}
+            onSelect={selectIndustry}
             onBack={() => back("step-1")}
+            iconMap={INDUSTRY_ICONS}
+            cols={2}
           />
         )}
         {phase === "step-3" && (
-          <Step3
-            selected={answers.timeline}
-            onSelect={selectTimeline}
+          <OptionStep
+            eyebrow={QUIZ.steps.condition.eyebrow}
+            title={QUIZ.steps.condition.title}
+            options={QUIZ.conditions}
+            selected={answers.condition}
+            onSelect={selectCondition}
             onBack={() => back("step-2")}
+            cols={1}
           />
         )}
-        {(phase === "step-4" || phase === "submitting" || phase === "error") && (
-          <Step4Email
+        {phase === "step-4" && (
+          <OptionStep
+            eyebrow={QUIZ.steps.standard.eyebrow}
+            title={QUIZ.steps.standard.title}
+            options={QUIZ.standards}
+            selected={answers.standard}
+            onSelect={selectStandard}
+            onBack={() => back("step-3")}
+            cols={3}
+          />
+        )}
+        {phase === "step-5" && (
+          <OptionStep
+            eyebrow={QUIZ.steps.location.eyebrow}
+            title={QUIZ.steps.location.title}
+            options={QUIZ.locations}
+            selected={answers.location}
+            onSelect={selectLocation}
+            onBack={() => back("step-4")}
+            cols={1}
+          />
+        )}
+        {(phase === "step-6" ||
+          phase === "submitting" ||
+          phase === "error") && (
+          <Step6Email
             email={emailDraft}
             setEmail={setEmailDraft}
             emailError={emailError}
             submitError={submitError}
             submitting={phase === "submitting"}
             onSubmit={submit}
-            onBack={() => back("step-3")}
+            onBack={() => back("step-5")}
             onTsToken={setTsToken}
           />
         )}
@@ -272,33 +336,56 @@ export function QuizWizard() {
 }
 
 /* ────────────────────────────────────────────────────────────── */
-/* Step 1 — Industry                                              */
+/* Generic option-picker step                                     */
 /* ────────────────────────────────────────────────────────────── */
 
-function Step1({
+type OptionLike = {
+  readonly id: string;
+  readonly label: string;
+  readonly sub?: string;
+  readonly icon?: string;
+};
+
+function OptionStep<T extends string>({
+  eyebrow,
+  title,
+  options,
   selected,
   onSelect,
+  onBack,
+  iconMap,
+  cols = 2,
 }: {
-  selected?: QuizIndustryId;
-  onSelect: (id: QuizIndustryId) => void;
+  eyebrow: string;
+  title: string;
+  options: ReadonlyArray<OptionLike>;
+  selected?: T;
+  onSelect: (id: T) => void;
+  onBack?: () => void;
+  iconMap?: Record<string, LucideIcon>;
+  cols?: 1 | 2 | 3;
 }) {
+  const gridClass =
+    cols === 1
+      ? "grid grid-cols-1 gap-3"
+      : cols === 3
+        ? "grid grid-cols-1 sm:grid-cols-3 gap-3"
+        : "grid grid-cols-1 sm:grid-cols-2 gap-3";
+
   return (
     <div>
-      <StepHeader
-        eyebrow={QUIZ.steps.industry.eyebrow}
-        title={QUIZ.steps.industry.title}
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        {QUIZ.industries.map((opt, i) => {
-          const Icon = INDUSTRY_ICONS[opt.icon];
+      <StepHeader eyebrow={eyebrow} title={title} onBack={onBack} />
+      <div className={gridClass}>
+        {options.map((opt, i) => {
+          const Icon = iconMap && opt.icon ? iconMap[opt.icon] : undefined;
           return (
             <QuizOption
               key={opt.id}
               label={opt.label}
-              sub={"sub" in opt ? opt.sub : undefined}
-              selected={selected === opt.id}
+              sub={opt.sub}
+              selected={selected === (opt.id as T)}
               icon={Icon ? <Icon size={18} strokeWidth={1.5} /> : null}
-              onSelect={() => onSelect(opt.id)}
+              onSelect={() => onSelect(opt.id as T)}
               {...(i === 0 ? { ref: focusFirst } : {})}
             />
           );
@@ -309,80 +396,10 @@ function Step1({
 }
 
 /* ────────────────────────────────────────────────────────────── */
-/* Step 2 — Area                                                  */
+/* Step 6 — Email + submit                                        */
 /* ────────────────────────────────────────────────────────────── */
 
-function Step2({
-  selected,
-  onSelect,
-  onBack,
-}: {
-  selected?: QuizAreaId;
-  onSelect: (id: QuizAreaId) => void;
-  onBack: () => void;
-}) {
-  return (
-    <div>
-      <StepHeader
-        eyebrow={QUIZ.steps.area.eyebrow}
-        title={QUIZ.steps.area.title}
-        onBack={onBack}
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        {QUIZ.areas.map((opt) => (
-          <QuizOption
-            key={opt.id}
-            label={opt.label}
-            sub={opt.sub}
-            selected={selected === opt.id}
-            onSelect={() => onSelect(opt.id)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────── */
-/* Step 3 — Timeline                                              */
-/* ────────────────────────────────────────────────────────────── */
-
-function Step3({
-  selected,
-  onSelect,
-  onBack,
-}: {
-  selected?: QuizTimelineId;
-  onSelect: (id: QuizTimelineId) => void;
-  onBack: () => void;
-}) {
-  return (
-    <div>
-      <StepHeader
-        eyebrow={QUIZ.steps.timeline.eyebrow}
-        title={QUIZ.steps.timeline.title}
-        onBack={onBack}
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        {QUIZ.timelines.map((opt) => (
-          <QuizOption
-            key={opt.id}
-            label={opt.label}
-            sub={"sub" in opt ? opt.sub : undefined}
-            selected={selected === opt.id}
-            onSelect={() => onSelect(opt.id)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────── */
-/* Step 4 — Email + submit                                        */
-/* ────────────────────────────────────────────────────────────── */
-
-function Step4Email({
+function Step6Email({
   email,
   setEmail,
   emailError,
@@ -478,8 +495,6 @@ function Step4Email({
 }
 
 /* ────────────────────────────────────────────────────────────── */
-/* Shared header                                                  */
-/* ────────────────────────────────────────────────────────────── */
 
 function StepHeader({
   eyebrow,
@@ -515,8 +530,6 @@ function StepHeader({
   );
 }
 
-/* Helper — auto-focus first option on mount of step 1.
-   Sentinel ref callback that triggers focus once. */
 function focusFirst(el: HTMLButtonElement | null) {
   if (el && document.activeElement === document.body) {
     el.focus({ preventScroll: true });

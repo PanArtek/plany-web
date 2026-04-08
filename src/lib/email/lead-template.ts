@@ -1,8 +1,10 @@
 import type { QuizLeadInput } from "@/lib/schemas/lead";
 import {
-  INDUSTRY_LABELS,
   AREA_LABELS,
-  TIMELINE_LABELS,
+  INDUSTRY_LABELS,
+  CONDITION_LABELS,
+  STANDARD_LABELS,
+  LOCATION_LABELS,
 } from "@/lib/quiz-labels";
 
 const escape = (s: string) =>
@@ -14,9 +16,11 @@ const escape = (s: string) =>
 
 export function leadEmailHtml(lead: QuizLeadInput, ip?: string): string {
   const rows: Array<[string, string]> = [
-    ["Branża", INDUSTRY_LABELS[lead.industry]],
     ["Metraż", AREA_LABELS[lead.area]],
-    ["Termin", TIMELINE_LABELS[lead.timeline]],
+    ["Branża", INDUSTRY_LABELS[lead.industry]],
+    ["Stan wejściowy", CONDITION_LABELS[lead.condition]],
+    ["Standard", STANDARD_LABELS[lead.standard]],
+    ["Lokalizacja", LOCATION_LABELS[lead.location]],
     ["Email", lead.email],
   ];
 
@@ -31,7 +35,7 @@ export function leadEmailHtml(lead: QuizLeadInput, ip?: string): string {
         .map(
           ([k, v]) => `
         <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #2A2622;font-size:11px;color:#9A8E7E;text-transform:uppercase;letter-spacing:.06em;width:130px;vertical-align:top;">${escape(k)}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #2A2622;font-size:11px;color:#9A8E7E;text-transform:uppercase;letter-spacing:.06em;width:140px;vertical-align:top;">${escape(k)}</td>
           <td style="padding:10px 0;border-bottom:1px solid #2A2622;font-size:14px;color:#E2D9CE;white-space:pre-wrap;">${escape(v)}</td>
         </tr>`,
         )

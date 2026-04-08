@@ -77,9 +77,11 @@ export async function POST(req: Request) {
         "[leads] Resend env vars missing — dev fallback, lead logged only",
         {
           email: lead.email,
-          industry: INDUSTRY_LABELS[lead.industry],
           area: lead.area,
-          timeline: lead.timeline,
+          industry: INDUSTRY_LABELS[lead.industry],
+          condition: lead.condition,
+          standard: lead.standard,
+          location: lead.location,
         },
       );
       return NextResponse.json({ ok: true, dev: true });

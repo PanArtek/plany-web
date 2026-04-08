@@ -1,16 +1,10 @@
 import type {
-  QuizIndustryId,
   QuizAreaId,
-  QuizTimelineId,
+  QuizIndustryId,
+  QuizConditionId,
+  QuizStandardId,
+  QuizLocationId,
 } from "@/content/landing";
-
-export const INDUSTRY_LABELS: Record<QuizIndustryId, string> = {
-  biuro: "Biuro",
-  klinika: "Klinika (dent / wet / med)",
-  szkola: "Szkoła / przedszkole",
-  gastro: "Gastronomia",
-  inne: "Inne",
-};
 
 export const AREA_LABELS: Record<QuizAreaId, string> = {
   do100: "do 100 m²",
@@ -19,9 +13,29 @@ export const AREA_LABELS: Record<QuizAreaId, string> = {
   "1000plus": "powyżej 1000 m²",
 };
 
-export const TIMELINE_LABELS: Record<QuizTimelineId, string> = {
-  asap: "ASAP — do miesiąca",
-  "3mc": "W ciągu 3 miesięcy",
-  later: "Później",
-  unknown: "Jeszcze nie wiem",
+export const INDUSTRY_LABELS: Record<QuizIndustryId, string> = {
+  medyczna: "Medyczna (dent / wet / med)",
+  edukacja: "Edukacja",
+  gastro: "Gastronomia",
+  retail: "Retail",
+  biuro: "Biuro",
+  inne: "Inne",
+};
+
+export const CONDITION_LABELS: Record<QuizConditionId, string> = {
+  surowy: "Surowy / shell & core",
+  "po-najemcy": "Po poprzednim najemcy",
+  remont: "Do remontu generalnego",
+};
+
+export const STANDARD_LABELS: Record<QuizStandardId, string> = {
+  funkcjonalny: "Funkcjonalny",
+  standardowy: "Standardowy",
+  premium: "Premium",
+};
+
+export const LOCATION_LABELS: Record<QuizLocationId, string> = {
+  warszawa: "Warszawa",
+  mazowsze: "Mazowsze (do 50 km od Warszawy)",
+  polska: "Reszta Polski",
 };
