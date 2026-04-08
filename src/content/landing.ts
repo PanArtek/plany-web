@@ -29,7 +29,7 @@ export const HERO = {
   ctaSecondary: "Realizacje ↓",
   stats: [
     { v: "10+", l: "lat doświadczenia" },
-    { v: "35", l: "osób w zespole" },
+    { v: "35+", l: "osób w zespole" },
   ],
 } as const;
 
