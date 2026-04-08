@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap, useGSAP } from "@/lib/gsapConfig";
+import { SpecializationsRotator } from "@/components/SpecializationsRotator";
 import { HERO } from "@/content/landing";
 
 function parseStat(v: string): { num: number; suffix: string } {
@@ -286,28 +287,27 @@ export function Hero() {
           </span>
         </h1>
 
+        <div
+          className="mb-5 transition-all duration-700"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? "translateY(0)" : "translateY(18px)",
+            transitionDelay: loaded ? "700ms" : "0ms",
+          }}
+        >
+          <SpecializationsRotator items={HERO.specRotator} intervalMs={1000} />
+        </div>
+
         <p
-          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-3 transition-all duration-700"
+          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-10 transition-all duration-700"
           style={{
             fontSize: "clamp(14px,1.6vw,17px)",
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
-            transitionDelay: loaded ? "750ms" : "0ms",
-          }}
-        >
-          {HERO.lead}
-        </p>
-
-        <p
-          className="font-sans text-dim mb-10 transition-all duration-700"
-          style={{
-            fontSize: "clamp(11px,1.1vw,13px)",
-            letterSpacing: ".04em",
-            opacity: loaded ? 1 : 0,
             transitionDelay: loaded ? "800ms" : "0ms",
           }}
         >
-          {HERO.subLead}
+          {HERO.lead}
         </p>
 
         <div

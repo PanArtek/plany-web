@@ -17,7 +17,14 @@ export const HERO = {
   titleLine1: "Realizujemy",
   titleAccent: "PLANY",
   lead: "Budowa wnętrz komercyjnych — jeden zespół, jeden termin, pełna kontrola kosztów.",
-  subLead: "Biura · Medycyna · Edukacja · Gastronomia · Retail · i inne",
+  specRotator: [
+    "Medycyna",
+    "Edukacja",
+    "Gastronomia",
+    "Retail",
+    "Biura",
+    "Inne +",
+  ] as const,
   ctaPrimary: "Szybka wycena",
   ctaSecondary: "Realizacje ↓",
   stats: [
