@@ -15,7 +15,8 @@ import {
   ArrowRight,
   type LucideIcon,
 } from "lucide-react";
-import { useInView } from "@/lib/hooks/use-in-view";
+import { useScrollReveal } from "@/lib/animations/useScrollReveal";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsapConfig";
 import { SPECS, SPEC_TITLE_LINES, type SpecIcon } from "@/content/landing";
 
 const ICONS: Record<SpecIcon, LucideIcon> = {
@@ -33,14 +34,10 @@ const ICONS: Record<SpecIcon, LucideIcon> = {
   BedDouble,
 };
 
-function SectionLabel({ text, vis }: { text: string; vis: boolean }) {
+function SectionLabel({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-4 mb-4">
-      <div
-        className="h-[2px] bg-accent transition-all duration-700 ease-[cubic-bezier(.16,1,.3,1)]"
-        style={{ width: vis ? 36 : 0, transitionDelay: "200ms" }}
-        aria-hidden
-      />
+    <div className="flex items-center gap-4 mb-4" data-reveal>
+      <div className="h-[2px] bg-accent w-9" aria-hidden />
       <span className="font-sans text-[11px] text-dim uppercase tracking-[.1em]">
         {text}
       </span>
@@ -48,23 +45,15 @@ function SectionLabel({ text, vis }: { text: string; vis: boolean }) {
   );
 }
 
-function SectionTitle({
-  children,
-  vis,
-}: {
-  children: React.ReactNode;
-  vis: boolean;
-}) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2
-      className="font-display font-extrabold text-text leading-[1.05] tracking-tight transition-all duration-700"
+      className="font-display font-extrabold text-text leading-[1.05] tracking-tight"
       style={{
         fontSize: "clamp(26px,4vw,42px)",
         letterSpacing: "-.03em",
-        opacity: vis ? 1 : 0,
-        transform: vis ? "translateY(0)" : "translateY(14px)",
-        transitionDelay: "200ms",
       }}
+      data-reveal
     >
       {children}
     </h2>
@@ -72,8 +61,56 @@ function SectionTitle({
 }
 
 export function Specjalizacje() {
-  const [ref, vis] = useInView<HTMLDivElement>();
-  const [ref2, vis2] = useInView<HTMLDivElement>();
+  const headerRef = useScrollReveal<HTMLDivElement>();
+  const gridRef = useScrollReveal<HTMLDivElement>({ stagger: 0.08 });
+
+  // Magnetic hover (desktop + hover-capable only).
+  useGSAP(
+    () => {
+      if (!gridRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px) and (hover: hover)", () => {
+        const cards = gridRef.current!.querySelectorAll<HTMLElement>(
+          "[data-spec-card]",
+        );
+        const cleanups: Array<() => void> = [];
+
+        cards.forEach((card) => {
+          const onMove = (e: MouseEvent) => {
+            const rect = card.getBoundingClientRect();
+            const relX = (e.clientX - rect.left) / rect.width - 0.5;
+            const relY = (e.clientY - rect.top) / rect.height - 0.5;
+            gsap.to(card, {
+              x: relX * 16,
+              y: relY * 16,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          };
+          const onLeave = () => {
+            gsap.to(card, {
+              x: 0,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            });
+          };
+          card.addEventListener("mousemove", onMove);
+          card.addEventListener("mouseleave", onLeave);
+          cleanups.push(() => {
+            card.removeEventListener("mousemove", onMove);
+            card.removeEventListener("mouseleave", onLeave);
+          });
+        });
+
+        return () => cleanups.forEach((fn) => fn());
+      });
+      return () => mm.revert();
+    },
+    { scope: gridRef },
+  );
+
+  void ScrollTrigger;
 
   return (
     <section
@@ -82,9 +119,9 @@ export function Specjalizacje() {
       style={{ paddingBlock: "clamp(64px,10vw,120px)" }}
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-max)" }}>
-        <div ref={ref} style={{ marginBottom: "clamp(40px,5vw,60px)" }}>
-          <SectionLabel text="Specjalizacje" vis={vis} />
-          <SectionTitle vis={vis}>
+        <div ref={headerRef} style={{ marginBottom: "clamp(40px,5vw,60px)" }}>
+          <SectionLabel text="Specjalizacje" />
+          <SectionTitle>
             {SPEC_TITLE_LINES[0]}
             <br />
             {SPEC_TITLE_LINES[1]}
@@ -92,23 +129,18 @@ export function Specjalizacje() {
         </div>
 
         <div
-          ref={ref2}
+          ref={gridRef}
           className="grid gap-3 md:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         >
-          {SPECS.map((s, i) => {
+          {SPECS.map((s) => {
             const Icon = ICONS[s.icon];
             return (
               <article
                 key={s.tag}
-                className="group relative bg-bg-alt border border-line hover:border-dim hover:bg-[#1C1A16] flex flex-col transition-all duration-300"
-                style={{
-                  padding: "clamp(28px,3vw,40px)",
-                  opacity: vis2 ? 1 : 0,
-                  transform: vis2 ? "translateY(0)" : "translateY(22px)",
-                  transitionDelay: `${150 + i * 120}ms`,
-                  transitionProperty: "opacity,transform,background,border-color",
-                  transitionDuration: "600ms",
-                }}
+                data-reveal
+                data-spec-card
+                className="group relative bg-bg-alt border border-line hover:border-dim hover:bg-[#1C1A16] flex flex-col transition-[background,border-color] duration-300 will-change-transform"
+                style={{ padding: "clamp(28px,3vw,40px)" }}
               >
                 <span
                   className="absolute top-0 left-0 h-[2px] bg-accent w-0 group-hover:w-full transition-all duration-500"

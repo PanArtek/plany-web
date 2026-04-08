@@ -1,12 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsapConfig";
 import { Logo } from "@/components/logo";
 import { NAV_ITEMS, NAV_EYEBROW } from "@/content/landing";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
@@ -15,6 +17,39 @@ export function Nav() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Hide on scroll down, show on scroll up.
+  useGSAP(
+    () => {
+      if (!navRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const st = ScrollTrigger.create({
+          start: 0,
+          end: "max",
+          onUpdate: (self) => {
+            if (!navRef.current) return;
+            if (self.direction === 1 && window.scrollY > 100) {
+              gsap.to(navRef.current, {
+                yPercent: -100,
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            } else if (self.direction === -1) {
+              gsap.to(navRef.current, {
+                yPercent: 0,
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
+        return () => st.kill();
+      });
+      return () => mm.revert();
+    },
+    { scope: navRef },
+  );
+
   const go = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setOpen(false);
@@ -22,7 +57,8 @@ export function Nav() {
 
   return (
     <nav
-      className={`fixed top-0 inset-x-0 z-100 h-15 section-pad-x flex items-center justify-between transition-all duration-300 ${
+      ref={navRef}
+      className={`fixed top-0 inset-x-0 z-100 h-15 section-pad-x flex items-center justify-between transition-[background-color,backdrop-filter,border-color] duration-300 will-change-transform ${
         scrolled
           ? "bg-bg-deep/90 backdrop-blur-md border-b border-line"
           : "bg-transparent border-b border-transparent"

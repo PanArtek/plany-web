@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Send, MapPin, Phone, Mail } from "lucide-react";
-import { useInView } from "@/lib/hooks/use-in-view";
+import { useScrollReveal } from "@/lib/animations/useScrollReveal";
 import { LeadSchema, type LeadInput } from "@/lib/schemas/lead";
 import { PTYPES, AREAS, CONTACT, KONTAKT_TITLE_LINES } from "@/content/landing";
 import { Logo } from "@/components/logo";
@@ -12,7 +12,7 @@ import { Logo } from "@/components/logo";
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 export function Kontakt() {
-  const [ref, vis] = useInView<HTMLDivElement>();
+  const ref = useScrollReveal<HTMLDivElement>({ stagger: 0.12 });
 
   return (
     <section
@@ -20,27 +20,25 @@ export function Kontakt() {
       className="bg-bg-deep border-t border-line section-pad-x"
       style={{ paddingBlock: "clamp(64px,10vw,120px)" }}
     >
-      <div className="mx-auto" style={{ maxWidth: "var(--container-max)" }}>
-        <div ref={ref} style={{ marginBottom: "clamp(36px,5vw,52px)" }}>
-          <div className="flex items-center gap-4 mb-4">
-            <div
-              className="h-[2px] bg-accent transition-all duration-700"
-              style={{ width: vis ? 36 : 0, transitionDelay: "200ms" }}
-              aria-hidden
-            />
+      <div
+        ref={ref}
+        className="mx-auto"
+        style={{ maxWidth: "var(--container-max)" }}
+      >
+        <div style={{ marginBottom: "clamp(36px,5vw,52px)" }}>
+          <div className="flex items-center gap-4 mb-4" data-reveal>
+            <div className="h-[2px] bg-accent w-9" aria-hidden />
             <span className="font-sans text-[11px] text-dim uppercase tracking-[.1em]">
               Kontakt
             </span>
           </div>
           <h2
-            className="font-display font-extrabold text-text leading-[1.05] transition-all duration-700"
+            className="font-display font-extrabold text-text leading-[1.05]"
             style={{
               fontSize: "clamp(26px,4vw,42px)",
               letterSpacing: "-.03em",
-              opacity: vis ? 1 : 0,
-              transform: vis ? "translateY(0)" : "translateY(14px)",
-              transitionDelay: "200ms",
             }}
+            data-reveal
           >
             {KONTAKT_TITLE_LINES[0]}
             <br />
@@ -49,8 +47,8 @@ export function Kontakt() {
         </div>
 
         <div
-          className="grid gap-8 md:gap-12 lg:gap-16 grid-cols-1 lg:[grid-template-columns:1.15fr_.85fr] transition-opacity duration-700"
-          style={{ opacity: vis ? 1 : 0, transitionDelay: "300ms" }}
+          className="grid gap-8 md:gap-12 lg:gap-16 grid-cols-1 lg:[grid-template-columns:1.15fr_.85fr]"
+          data-reveal
         >
           <ContactForm />
           <ContactInfo />

@@ -1,4 +1,5 @@
 "use client";
+import { useRef } from "react";
 import {
   Search,
   FileText,
@@ -7,7 +8,8 @@ import {
   LifeBuoy,
   type LucideIcon,
 } from "lucide-react";
-import { useInView } from "@/lib/hooks/use-in-view";
+import { useScrollReveal } from "@/lib/animations/useScrollReveal";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsapConfig";
 import {
   STEPS,
   PROCES_KICKER_LINES,
@@ -25,8 +27,70 @@ const ICONS: Record<StepIcon, LucideIcon> = {
 };
 
 export function Proces() {
-  const [ref, vis] = useInView<HTMLDivElement>();
-  const [ref2, vis2] = useInView<HTMLDivElement>();
+  const headerRef = useScrollReveal<HTMLDivElement>({ stagger: 0.08 });
+  const stepsRef = useRef<HTMLDivElement>(null);
+
+  // Sequential timeline reveal for steps + connecting line.
+  useGSAP(
+    () => {
+      if (!stepsRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (ctx) => {
+          const { reduced } = ctx.conditions as {
+            motion: boolean;
+            reduced: boolean;
+          };
+          const cards = stepsRef.current!.querySelectorAll<HTMLElement>(
+            "[data-step]",
+          );
+          const line = stepsRef.current!.querySelector<HTMLElement>(
+            "[data-step-line]",
+          );
+
+          if (reduced) {
+            gsap.set(cards, { opacity: 1, y: 0 });
+            if (line) gsap.set(line, { scaleX: 1 });
+            return;
+          }
+
+          gsap.set(cards, { opacity: 0, y: 24 });
+          if (line) gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: stepsRef.current!,
+              start: "top 70%",
+              once: true,
+            },
+          });
+
+          if (line) {
+            tl.to(line, { scaleX: 1, duration: 1.1, ease: "power2.out" }, 0);
+          }
+          tl.to(
+            cards,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power3.out",
+              stagger: 0.2,
+            },
+            0.1,
+          );
+        },
+      );
+      return () => mm.revert();
+    },
+    { scope: stepsRef },
+  );
+
+  void ScrollTrigger;
 
   return (
     <section
@@ -36,44 +100,36 @@ export function Proces() {
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-max)" }}>
         <div
-          ref={ref}
+          ref={headerRef}
           className="flex flex-wrap justify-between items-end gap-8"
           style={{ marginBottom: "clamp(40px,5vw,60px)" }}
         >
           <div className="max-w-[640px]">
-            <div className="flex items-center gap-4 mb-4">
-              <div
-                className="h-[2px] bg-accent transition-all duration-700"
-                style={{ width: vis ? 36 : 0, transitionDelay: "200ms" }}
-                aria-hidden
-              />
+            <div className="flex items-center gap-4 mb-4" data-reveal>
+              <div className="h-[2px] bg-accent w-9" aria-hidden />
               <span className="font-sans text-[11px] text-dim uppercase tracking-[.1em]">
                 Proces
               </span>
             </div>
             <p
-              className="font-display font-bold text-muted leading-[1.15] mb-3 transition-all duration-700"
+              className="font-display font-bold text-muted leading-[1.15] mb-3"
               style={{
                 fontSize: "clamp(18px,2.4vw,26px)",
                 letterSpacing: "-.02em",
-                opacity: vis ? 1 : 0,
-                transform: vis ? "translateY(0)" : "translateY(14px)",
-                transitionDelay: "180ms",
               }}
+              data-reveal
             >
               {PROCES_KICKER_LINES[0]}
               <br />
               {PROCES_KICKER_LINES[1]}
             </p>
             <h2
-              className="font-display font-extrabold text-text leading-[1.05] transition-all duration-700"
+              className="font-display font-extrabold text-text leading-[1.05]"
               style={{
                 fontSize: "clamp(26px,4vw,42px)",
                 letterSpacing: "-.03em",
-                opacity: vis ? 1 : 0,
-                transform: vis ? "translateY(0)" : "translateY(14px)",
-                transitionDelay: "260ms",
               }}
+              data-reveal
             >
               {PROCES_TITLE_LINES[0]}
               <br />
@@ -81,33 +137,33 @@ export function Proces() {
             </h2>
           </div>
           <p
-            className="font-sans font-light text-muted leading-relaxed max-w-[360px] transition-opacity duration-700"
-            style={{
-              fontSize: "clamp(13px,1.3vw,15px)",
-              opacity: vis ? 1 : 0,
-              transitionDelay: "400ms",
-            }}
+            className="font-sans font-light text-muted leading-relaxed max-w-[360px]"
+            style={{ fontSize: "clamp(13px,1.3vw,15px)" }}
+            data-reveal
           >
             {PROCES_INTRO}
           </p>
         </div>
 
         <div
-          ref={ref2}
+          ref={stepsRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 relative"
           style={{ gap: "clamp(18px,2.5vw,32px)" }}
         >
+          {/* Connecting line behind cards on lg+ */}
+          <div
+            data-step-line
+            aria-hidden
+            className="hidden lg:block absolute left-0 right-0 top-[15px] h-px bg-line pointer-events-none"
+          />
           {STEPS.map((s, i) => {
             const Icon = ICONS[s.icon];
             return (
               <div
                 key={s.n}
-                className="group relative min-w-0 transition-all duration-700"
-                style={{
-                  opacity: vis2 ? 1 : 0,
-                  transform: vis2 ? "translateY(0)" : "translateY(18px)",
-                  transitionDelay: `${120 + i * 90}ms`,
-                }}
+                data-step
+                className="group relative min-w-0 bg-bg"
+                style={{ zIndex: 1 }}
               >
                 <div className="flex items-center justify-between mb-3.5">
                   <span
@@ -141,6 +197,8 @@ export function Proces() {
                 >
                   {s.d}
                 </p>
+                {/* Suppress unused index warning */}
+                <span hidden>{i}</span>
               </div>
             );
           })}

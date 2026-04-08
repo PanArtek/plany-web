@@ -1,22 +1,185 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { gsap, useGSAP } from "@/lib/gsapConfig";
 import { HERO } from "@/content/landing";
+
+function parseStat(v: string): { num: number; suffix: string } {
+  const match = v.match(/(\d+)(\D*)/);
+  if (!match) return { num: 0, suffix: v };
+  return { num: parseInt(match[1], 10), suffix: match[2] || "" };
+}
 
 export function Hero() {
   const [loaded, setLoaded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleLine1Ref = useRef<HTMLSpanElement>(null);
+  const titleAccentRef = useRef<HTMLSpanElement>(null);
+  const statValueRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 80);
     return () => clearTimeout(t);
   }, []);
 
+  // Hero title per-word reveal (manual split — works without SplitText Club plugin).
+  useGSAP(
+    () => {
+      if (!loaded) return;
+      const mm = gsap.matchMedia();
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (ctx) => {
+          const { reduced } = ctx.conditions as {
+            motion: boolean;
+            reduced: boolean;
+          };
+          const words: HTMLElement[] = [];
+          if (titleLine1Ref.current)
+            words.push(
+              ...titleLine1Ref.current.querySelectorAll<HTMLElement>(
+                "[data-word]",
+              ),
+            );
+          if (titleAccentRef.current) words.push(titleAccentRef.current);
+
+          if (words.length === 0) return;
+
+          if (reduced) {
+            gsap.set(words, { opacity: 1, y: 0 });
+            return;
+          }
+
+          gsap.set(words, { opacity: 0, y: 24 });
+          gsap.to(words, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            stagger: 0.05,
+            delay: 0.6,
+          });
+        },
+      );
+      return () => mm.revert();
+    },
+    { dependencies: [loaded], scope: sectionRef },
+  );
+
+  // Stats counter — animate from 0 to target after loaded.
+  useGSAP(
+    () => {
+      if (!loaded) return;
+      const mm = gsap.matchMedia();
+      mm.add(
+        {
+          motion: "(prefers-reduced-motion: no-preference)",
+          reduced: "(prefers-reduced-motion: reduce)",
+        },
+        (ctx) => {
+          const { reduced } = ctx.conditions as {
+            motion: boolean;
+            reduced: boolean;
+          };
+
+          HERO.stats.forEach((s, i) => {
+            const el = statValueRefs.current[i];
+            if (!el) return;
+            const { num, suffix } = parseStat(s.v);
+            if (reduced) {
+              el.textContent = `${num}${suffix}`;
+              return;
+            }
+            const obj = { val: 0 };
+            gsap.to(obj, {
+              val: num,
+              snap: { val: 1 },
+              duration: 1.2,
+              ease: "power2.out",
+              delay: 1 + i * 0.1,
+              onUpdate: () => {
+                el.textContent = `${Math.round(obj.val)}${suffix}`;
+              },
+            });
+          });
+        },
+      );
+      return () => mm.revert();
+    },
+    { dependencies: [loaded], scope: sectionRef },
+  );
+
+  // CTA idle pulse — start after 5s without interaction.
+  useGSAP(
+    () => {
+      if (!loaded || !ctaRef.current) return;
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        let tween: gsap.core.Tween | null = null;
+        let timer: number | null = null;
+
+        const start = () => {
+          if (tween || !ctaRef.current) return;
+          tween = gsap.to(ctaRef.current, {
+            scale: 1.02,
+            duration: 2,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+            transformOrigin: "center center",
+          });
+        };
+
+        const stop = () => {
+          if (tween) {
+            tween.kill();
+            tween = null;
+            if (ctaRef.current) gsap.set(ctaRef.current, { scale: 1 });
+          }
+        };
+
+        const reset = () => {
+          stop();
+          if (timer) window.clearTimeout(timer);
+          timer = window.setTimeout(start, 5000);
+        };
+
+        const events: Array<keyof WindowEventMap> = [
+          "mousemove",
+          "touchstart",
+          "scroll",
+          "keydown",
+        ];
+        events.forEach((e) =>
+          window.addEventListener(e, reset, { passive: true }),
+        );
+        reset();
+
+        return () => {
+          stop();
+          if (timer) window.clearTimeout(timer);
+          events.forEach((e) => window.removeEventListener(e, reset));
+        };
+      });
+      return () => mm.revert();
+    },
+    { dependencies: [loaded], scope: sectionRef },
+  );
+
   const go = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  const titleLine1Words = HERO.titleLine1.split(" ");
 
   return (
     <section
       id="hero"
+      ref={sectionRef}
       className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden"
-      style={{ paddingTop: "max(120px, 14vh)", paddingBottom: "180px" }}
+      style={{ paddingTop: "max(120px, 14vh)", paddingBottom: "clamp(160px, 22vh, 220px)" }}
     >
       <div className="grain" aria-hidden />
       <div
@@ -39,18 +202,32 @@ export function Hero() {
 
       <div className="relative z-2 section-pad-x max-w-[900px]">
         <h1
-          className="font-display font-extrabold text-text leading-[.9] tracking-tight mb-3 transition-all duration-700"
+          className="font-display font-extrabold text-text leading-[.9] tracking-tight mb-3"
           style={{
             fontSize: "clamp(34px,7vw,76px)",
             letterSpacing: "-.03em",
-            opacity: loaded ? 1 : 0,
-            transform: loaded ? "translateY(0)" : "translateY(18px)",
-            transitionDelay: loaded ? "600ms" : "0ms",
           }}
         >
-          {HERO.titleLine1}
+          <span ref={titleLine1Ref} style={{ display: "inline" }}>
+            {titleLine1Words.map((w, i) => (
+              <span
+                key={i}
+                data-word
+                style={{ display: "inline-block", willChange: "transform" }}
+              >
+                {w}
+                {i < titleLine1Words.length - 1 ? "\u00A0" : ""}
+              </span>
+            ))}
+          </span>
           <br />
-          <span className="text-accent">{HERO.titleAccent}</span>
+          <span
+            ref={titleAccentRef}
+            className="text-accent"
+            style={{ display: "inline-block", willChange: "transform" }}
+          >
+            {HERO.titleAccent}
+          </span>
         </h1>
 
         <p
@@ -78,7 +255,7 @@ export function Hero() {
         </p>
 
         <div
-          className="flex items-center gap-6 transition-all duration-700"
+          className="flex flex-wrap items-center gap-4 sm:gap-6 transition-all duration-700"
           style={{
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
@@ -86,8 +263,9 @@ export function Hero() {
           }}
         >
           <button
+            ref={ctaRef}
             onClick={() => go("kontakt")}
-            className="font-sans text-[12px] font-medium uppercase tracking-wider px-8 py-4 bg-accent text-white border-none cursor-pointer hover:bg-accent-hover transition-colors min-h-11"
+            className="font-sans text-[12px] font-medium uppercase tracking-wider px-6 sm:px-8 py-4 bg-accent text-white border-none cursor-pointer hover:bg-accent-hover transition-colors min-h-11 will-change-transform"
           >
             {HERO.ctaPrimary}
           </button>
@@ -103,10 +281,11 @@ export function Hero() {
       {/* Stats bar */}
       <div className="absolute bottom-0 inset-x-0 border-t border-line section-pad-x py-8 z-2">
         <div
-          className="grid gap-x-12 max-w-[560px]"
+          className="grid max-w-[560px]"
           style={{
-            gridTemplateColumns: "repeat(3,auto)",
-            columnGap: "clamp(28px,6vw,80px)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+            columnGap: "clamp(20px,5vw,80px)",
+            rowGap: "20px",
           }}
         >
           {HERO.stats.map((s, i) => (
@@ -120,6 +299,9 @@ export function Hero() {
               }}
             >
               <div
+                ref={(el) => {
+                  statValueRefs.current[i] = el;
+                }}
                 className="font-display font-bold text-text leading-none mb-1"
                 style={{ fontSize: "clamp(26px,3.5vw,38px)" }}
               >

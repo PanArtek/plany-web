@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { LenisProvider } from "@/components/LenisProvider";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -61,11 +62,11 @@ export default function RootLayout({
       lang="pl"
       className={`${newsreader.variable} ${jakarta.variable} antialiased`}
     >
-      <body className="min-h-dvh bg-bg text-text font-sans">
+      <body className="min-h-dvh bg-bg text-text font-sans overflow-x-hidden">
         <a href="#hero" className="skip-link">
           Przejdź do treści
         </a>
-        {children}
+        <LenisProvider>{children}</LenisProvider>
         <Analytics />
       </body>
     </html>

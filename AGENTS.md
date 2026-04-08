@@ -71,3 +71,10 @@ ostre krawędzie, subtelne fade-in scroll, hover: górna linia accent.
 ## Workflow
 Brainstorm → AGENTS.md → writing-plans → prd.json (taski <10 min)
 → ./ralph.sh --tool claude N → weryfikacja (Lighthouse Mobile + Supabase + Vercel preview)
+
+## MCP Servers
+- **gsap-master**: użyj dla animation creation, debugging, performance refactoring.
+  Tools: `understand_and_create_animation` (generowanie animacji z opisu),
+  `debug_animation_issue` (debug laggy/broken animacji),
+  `optimize_for_performance` (refactor pod 60fps + GPU).
+  WSZYSTKIE animacje importują gsap z `@/lib/gsapConfig` (nigdy bezpośrednio z `'gsap'`).
