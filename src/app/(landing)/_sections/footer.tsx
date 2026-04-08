@@ -16,6 +16,7 @@ export function Footer() {
         </span>
         <div className="flex gap-5 justify-center flex-wrap">
           <span className="font-sans text-[10px] text-dim">{FOOTER.nip}</span>
+          <span className="font-sans text-[10px] text-dim">{FOOTER.regon}</span>
           <span className="font-sans text-[10px] text-dim">{FOOTER.krs}</span>
         </div>
         <a

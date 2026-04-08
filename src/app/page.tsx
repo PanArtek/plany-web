@@ -7,23 +7,32 @@ import { Stats } from "./(landing)/_sections/stats";
 import { Kontakt } from "./(landing)/_sections/kontakt";
 import { Footer } from "./(landing)/_sections/footer";
 import { StickyCallCTA } from "@/components/sticky-call-cta";
+import { CONTACT } from "@/content/landing";
 
 export default function Home() {
   const ldJson = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "PLANY Sp. z o.o.",
+    name: CONTACT.companyName,
+    legalName: CONTACT.companyFullName,
     description:
       "Generalny wykonawca fit-out: biura, kliniki, edukacja, gastronomia, retail.",
     url: "https://plany.com.pl",
-    telephone: "+48 XXX XXX XXX",
-    email: "biuro@plany.com.pl",
+    telephone: CONTACT.phoneE164,
+    email: CONTACT.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Warszawa",
-      addressRegion: "Wawer",
+      streetAddress: CONTACT.street,
+      postalCode: CONTACT.postalCode,
+      addressLocality: CONTACT.city,
       addressCountry: "PL",
     },
+    taxID: CONTACT.nip,
+    vatID: `PL${CONTACT.nip}`,
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "KRS", value: CONTACT.krs },
+      { "@type": "PropertyValue", propertyID: "REGON", value: CONTACT.regon },
+    ],
     areaServed: "Warszawa",
     priceRange: "100k–10M PLN",
   };

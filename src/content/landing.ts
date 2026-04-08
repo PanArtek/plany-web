@@ -285,11 +285,20 @@ export const KONTAKT_TITLE_LINES = [
 ] as const;
 
 export const CONTACT = {
-  address: "Warszawa, dzielnica Wawer",
+  companyName: "PLANY Sp. z o.o.",
+  companyFullName: "PLANY SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+  street: "Długa 29",
+  postalCode: "00-238",
+  city: "Warszawa",
+  country: "Polska",
+  address: "Długa 29, 00-238 Warszawa",
   phone: "+48 511 222 252",
   phoneE164: "+48511222252",
   phoneOwner: "Łukasz",
   email: "biuro@plany.com.pl",
+  nip: "5253016152",
+  regon: "529591804",
+  krs: "0001125454",
   description:
     "Fit-out komercyjny — biura, kliniki, szkoły. Od konsultacji po klucz.",
 } as const;
@@ -385,6 +394,7 @@ export type QuizLocationId = (typeof QUIZ.locations)[number]["id"];
 
 export const FOOTER = {
   copyright: "© 2026 PLANY Sp. z o.o.",
-  nip: "NIP: XXX-XXX-XX-XX",
-  krs: "KRS: XXXXXXXXXX",
+  nip: "NIP: 5253016152",
+  regon: "REGON: 529591804",
+  krs: "KRS: 0001125454",
 } as const;

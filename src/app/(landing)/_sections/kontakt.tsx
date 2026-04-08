@@ -103,7 +103,7 @@ function ContactInfo() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
           <MapPin size={18} strokeWidth={1.2} className="text-accent" />
-          <span className="font-sans text-[11px] text-dim">Wawer, Warszawa</span>
+          <span className="font-sans text-[11px] text-dim">{CONTACT.address}</span>
         </div>
       </div>
     </aside>
