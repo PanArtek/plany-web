@@ -4,6 +4,7 @@ type Props = {
   gap?: number;
   className?: string;
   ariaLabel?: string;
+  negative?: boolean;
 };
 
 /**
@@ -23,6 +24,7 @@ export function Logo({
   gap = 0.15,
   className,
   ariaLabel = "PLANY",
+  negative = false,
 }: Props) {
   const letters = ["P", "L", "A", "N", "Y"];
   const r = size / 2;
@@ -40,9 +42,42 @@ export function Logo({
       className={className}
       style={{ display: "block" }}
     >
+      {negative && (
+        <defs>
+          {letters.map((l, i) => {
+            const cx = r + i * step;
+            return (
+              <mask key={`mask-${i}`} id={`lm${i}`}>
+                <circle cx={cx} cy={r} r={r} fill="white" />
+                <text
+                  x={cx}
+                  y={r}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="black"
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  fontWeight={900}
+                  fontSize={size * 0.5}
+                >
+                  {l}
+                </text>
+              </mask>
+            );
+          })}
+        </defs>
+      )}
       {letters.map((l, i) => {
         const cx = r + i * step;
-        return (
+        return negative ? (
+          <circle
+            key={`${l}-${i}`}
+            cx={cx}
+            cy={r}
+            r={r}
+            fill={color}
+            mask={`url(#lm${i})`}
+          />
+        ) : (
           <g key={`${l}-${i}`}>
             <circle
               cx={cx}

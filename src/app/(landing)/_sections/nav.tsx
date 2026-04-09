@@ -184,7 +184,7 @@ export function Nav() {
                   data-eb="logo"
                   className="inline-flex will-change-transform"
                 >
-                  <Logo size={20} color="#C4A97D" />
+                  <Logo size={20} color="#C4A97D" negative />
                 </span>
               ) : (
                 <span
