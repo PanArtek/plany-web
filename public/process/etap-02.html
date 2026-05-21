@@ -26,8 +26,8 @@
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 300;
-    padding: 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    padding: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -36,10 +36,10 @@
     background: var(--bg-alt); border: 1px solid var(--line); padding: 4px;
   }
   .tab {
-    padding: 8px 18px; border: none; background: transparent;
-    cursor: pointer; font: 500 12px/1 'Plus Jakarta Sans', system-ui, sans-serif;
+    padding: 6px 12px; border: none; background: transparent;
+    cursor: pointer; font: 500 10px/1 'Plus Jakarta Sans', system-ui, sans-serif;
     color: var(--muted); letter-spacing: .03em;
-    transition: all .15s;
+    transition: all .15s; white-space: nowrap;
   }
   .tab.active { background: var(--accent); color: var(--bg); }
   .tab:hover:not(.active) { background: var(--bg); color: var(--ink); }
@@ -48,9 +48,9 @@
     display: flex; gap: 8px; align-items: center;
   }
   .btn {
-    padding: 6px 14px; border: 1px solid var(--line);
+    padding: 5px 10px; border: 1px solid var(--line);
     background: var(--bg-alt); color: var(--muted);
-    font: 500 12px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer;
+    font: 500 10px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer;
     transition: all .15s; letter-spacing: .03em;
   }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -58,11 +58,12 @@
   .btn.primary:hover { background: #D4BA8E; color: var(--bg); }
 
   .frame {
-    width: min(92vw, 720px);
-    aspect-ratio: 4/5;
+    width: 100%;
+    max-width: 720px;
+    flex: 1;
     background: var(--paper);
     border: 1px solid var(--line);
-    padding: 28px 32px;
+    padding: 16px 18px;
     overflow: hidden;
     display: flex; flex-direction: column;
     position: relative;
@@ -76,43 +77,43 @@
   }
   .doc-header h1 {
     font-family: 'Newsreader', Georgia, serif;
-    font-size: 18px; color: var(--ink); font-weight: 700;
+    font-size: 14px; color: var(--ink); font-weight: 700;
     letter-spacing: -.3px;
   }
   .doc-header .company {
-    font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.5;
+    font-size: 9px; color: var(--muted); margin-top: 2px; line-height: 1.4;
   }
   .doc-header .meta {
-    font-size: 9.5px; color: var(--muted); text-align: right; line-height: 1.6;
+    font-size: 8px; color: var(--muted); text-align: right; line-height: 1.5;
   }
   .doc-header .meta strong { color: var(--ink); }
 
   .offer-title {
-    font-size: 11px; color: var(--ink); margin-bottom: 12px;
-    font-style: italic; padding: 6px 10px;
-    background: var(--bg-alt); border-left: 3px solid var(--accent);
+    font-size: 9px; color: var(--ink); margin-bottom: 8px;
+    font-style: italic; padding: 4px 8px;
+    background: var(--bg-alt); border-left: 2px solid var(--accent);
   }
 
   .table-wrap {
     flex: 1; overflow: hidden;
     display: flex; flex-direction: column;
-    font-size: 9.5px; line-height: 1.45;
+    font-size: 8px; line-height: 1.4;
   }
 
   /* === PODSUMOWANIE === */
   .sum-colhead {
     display: grid;
-    grid-template-columns: 36px 1fr 100px;
-    gap: 10px;
+    grid-template-columns: 30px 1fr 80px;
+    gap: 6px;
     background: rgba(196,169,125,.08);
     color: var(--accent); font-weight: 600;
-    padding: 7px 10px;
-    font-size: 9.5px;
+    padding: 5px 8px;
+    font-size: 8px;
     letter-spacing: .03em;
   }
   .sum-row {
     display: grid;
-    grid-template-columns: 36px 1fr 100px;
+    grid-template-columns: 30px 1fr 80px;
     gap: 10px;
     padding: 6px 10px;
     border-bottom: 1px solid var(--grid);
@@ -181,12 +182,12 @@
     border-top: 2px solid var(--ink);
   }
   .total .label {
-    font-size: 13px; color: var(--ink); font-weight: 600;
+    font-size: 10px; color: var(--ink); font-weight: 600;
     letter-spacing: .5px;
   }
   .total .amount {
     font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
-    font-size: 22px; font-weight: 800;
+    font-size: 16px; font-weight: 800;
     color: var(--total);
     background: var(--total-bg);
     padding: 6px 14px;

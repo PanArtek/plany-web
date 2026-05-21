@@ -21,21 +21,29 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
       tabIndex={0}
       aria-hidden={!isActive}
       className={cn(
-        "relative overflow-hidden aspect-[3/4] min-[900px]:aspect-[16/9] min-[900px]:min-h-[560px]",
+        "relative overflow-hidden",
+        step.embed
+          ? "aspect-[4/5] min-[900px]:aspect-[4/5] min-[900px]:max-w-[720px] min-[900px]:mx-auto"
+          : "aspect-[3/4] min-[900px]:aspect-[16/9] min-[900px]:min-h-[560px]",
         isActive
           ? "relative"
           : "absolute inset-0 opacity-0 pointer-events-none",
       )}
+      style={step.embed ? { "--iframe-scale": "min(calc(100vw / 800), 1)" } as React.CSSProperties : undefined}
     >
       {step.embed ? (
-        /* Embedded HTML (e.g. animated kosztorys) — full bleed iframe */
-        <iframe
-          data-media
-          src={step.embed}
-          title={`${step.label} — etap ${step.num}`}
-          className="absolute inset-0 w-full h-full border-0"
-          loading="lazy"
-        />
+        /* Embedded HTML (e.g. animated kosztorys) — scaled iframe */
+        <div data-media className="absolute inset-0 overflow-hidden">
+          <iframe
+            src={step.embed}
+            title={`${step.label} — etap ${step.num}`}
+            className="border-0 origin-top-left w-[800px] h-[1000px] min-[900px]:w-full min-[900px]:h-full"
+            style={{
+              transform: "scale(var(--iframe-scale))",
+            }}
+            loading="lazy"
+          />
+        </div>
       ) : (
         <>
           {/* Background image or placeholder */}
