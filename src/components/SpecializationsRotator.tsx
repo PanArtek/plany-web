@@ -4,20 +4,23 @@ import { gsap, useGSAP } from "@/lib/gsapConfig";
 
 type Props = {
   items: readonly string[];
-  /** ms between switches; default 1000 */
-  intervalMs?: number;
+  activeIndex: number;
+  onSelect?: (i: number) => void;
   className?: string;
 };
 
-const TWEEN_MS = 400;
+const ACTIVE_COLOR = "#E2D9CE";
+const INACTIVE_COLOR = "#9A8E7E";
+const TWEEN_SEC = 0.4;
 
 export function SpecializationsRotator({
   items,
-  intervalMs = 1000,
+  activeIndex,
+  onSelect,
   className = "",
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const wordRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const wordRefs = useRef<Array<HTMLElement | null>>([]);
 
   useGSAP(
     () => {
@@ -35,50 +38,33 @@ export function SpecializationsRotator({
           const words = wordRefs.current.filter(Boolean) as HTMLElement[];
           if (words.length === 0) return;
 
-          if (reduced) {
-            gsap.set(words, { color: "#E2D9CE" });
-            return;
-          }
-
-          gsap.set(words, { color: "#9A8E7E" });
-          gsap.set(words[0], { color: "#E2D9CE" });
-
-          const dwellSec = Math.max(0, (intervalMs - TWEEN_MS) / 1000);
-          const tweenSec = TWEEN_MS / 1000;
-
-          const tl = gsap.timeline({ repeat: -1 });
-          words.forEach((_, i) => {
-            const next = (i + 1) % words.length;
-            tl.to(
-              words[i],
-              {
-                color: "#9A8E7E",
-                duration: tweenSec,
+          words.forEach((el, i) => {
+            const color = i === activeIndex ? ACTIVE_COLOR : INACTIVE_COLOR;
+            if (reduced) {
+              gsap.set(el, { color });
+            } else {
+              gsap.to(el, {
+                color,
+                duration: TWEEN_SEC,
                 ease: "power2.inOut",
-              },
-              `+=${dwellSec}`,
-            ).to(
-              words[next],
-              {
-                color: "#E2D9CE",
-                duration: tweenSec,
-                ease: "power2.inOut",
-              },
-              "<",
-            );
+                overwrite: "auto",
+              });
+            }
           });
         },
       );
       return () => mm.revert();
     },
-    { scope: containerRef, dependencies: [items, intervalMs] },
+    { scope: containerRef, dependencies: [activeIndex, items] },
   );
+
+  const interactive = typeof onSelect === "function";
 
   return (
     <div
       ref={containerRef}
-      role="list"
-      aria-label="Nasze specjalizacje"
+      role={interactive ? undefined : "list"}
+      aria-label={interactive ? undefined : "Nasze specjalizacje"}
       className={`flex flex-wrap items-center gap-x-2 gap-y-1 ${className}`}
       style={{
         fontSize: "clamp(13px, 1.4vw, 16px)",
@@ -94,15 +80,35 @@ export function SpecializationsRotator({
               /
             </span>
           )}
-          <span
-            ref={(el) => {
-              wordRefs.current[i] = el;
-            }}
-            role="listitem"
-            className="text-muted will-change-[color]"
-          >
-            {word}
-          </span>
+          {interactive ? (
+            <button
+              ref={(el) => {
+                wordRefs.current[i] = el;
+              }}
+              type="button"
+              onClick={() => onSelect!(i)}
+              aria-pressed={i === activeIndex}
+              aria-label={`Pokaż kategorię ${word}`}
+              className="text-muted will-change-[color] cursor-pointer bg-transparent border-0 p-0 font-inherit tracking-inherit hover:text-text transition-colors"
+              style={{
+                font: "inherit",
+                letterSpacing: "inherit",
+                lineHeight: "inherit",
+              }}
+            >
+              {word}
+            </button>
+          ) : (
+            <span
+              ref={(el) => {
+                wordRefs.current[i] = el;
+              }}
+              role="listitem"
+              className="text-muted will-change-[color]"
+            >
+              {word}
+            </span>
+          )}
         </Fragment>
       ))}
     </div>

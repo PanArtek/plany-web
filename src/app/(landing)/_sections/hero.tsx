@@ -5,6 +5,11 @@ import { ArrowRight, ArrowDown } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsapConfig";
 import { SpecializationsRotator } from "@/components/SpecializationsRotator";
 import { HERO } from "@/content/landing";
+import {
+  HERO_CATEGORIES,
+  HERO_CATEGORY_NAMES,
+} from "@/content/hero-categories";
+import { useHeroCategory } from "../_components/hero-category-provider";
 
 function parseStat(v: string): { num: number; suffix: string } {
   const match = v.match(/(\d+)(\D*)/);
@@ -13,6 +18,7 @@ function parseStat(v: string): { num: number; suffix: string } {
 }
 
 export function Hero() {
+  const { activeIndex, setActive, pause, resume } = useHeroCategory();
   const [loaded, setLoaded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const titleLine1Ref = useRef<HTMLSpanElement>(null);
@@ -220,23 +226,40 @@ export function Hero() {
     <section
       id="hero"
       ref={sectionRef}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
       className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden pb-10 md:pb-[clamp(160px,22vh,220px)]"
       style={{ paddingTop: "max(110px, 13vh)" }}
     >
-      {/* Background image — full bleed, all viewports */}
+      {/* Background — 5-layer crossfade stack, full bleed, all viewports */}
       <div
         ref={heroImageRef}
         className="absolute inset-0 z-0 will-change-transform"
         aria-hidden
       >
-        <Image
-          src="/hero/realization-edukacja.png"
-          alt=""
-          fill
-          sizes="100vw"
-          priority
-          className="object-cover object-center"
-        />
+        {HERO_CATEGORIES.map((cat, i) => (
+          <div
+            key={cat.slug}
+            className="absolute inset-0 motion-safe:transition-opacity motion-safe:duration-1000 ease-in-out"
+            style={{ opacity: i === activeIndex ? 1 : 0 }}
+          >
+            {cat.image ? (
+              <Image
+                src={cat.image}
+                alt=""
+                fill
+                sizes="100vw"
+                priority={i === 0}
+                className="object-cover object-center"
+              />
+            ) : (
+              <div
+                className="absolute inset-0"
+                style={{ background: cat.grad }}
+              />
+            )}
+          </div>
+        ))}
       </div>
       {/* Strong dark overlay for text legibility (Warm Sand tint) */}
       <div
@@ -308,7 +331,11 @@ export function Hero() {
             transitionDelay: loaded ? "800ms" : "0ms",
           }}
         >
-          <SpecializationsRotator items={HERO.specRotator} intervalMs={1000} />
+          <SpecializationsRotator
+            items={HERO_CATEGORY_NAMES}
+            activeIndex={activeIndex}
+            onSelect={setActive}
+          />
         </div>
 
         <div
@@ -335,6 +362,37 @@ export function Hero() {
             <ArrowDown size={15} strokeWidth={2.25} />
           </button>
         </div>
+      </div>
+
+      {/* Progress dots — flow on mobile, absolute bottom-right on md+ */}
+      <div
+        role="tablist"
+        aria-label="Aktywna kategoria"
+        className="relative z-2 mt-8 flex justify-center gap-2 transition-all duration-700 md:absolute md:right-0 md:bottom-32 md:mt-0 md:justify-end md:pr-[clamp(20px,4vw,60px)] lg:pr-14"
+        style={{
+          opacity: loaded ? 1 : 0,
+          transform: loaded ? "translateY(0)" : "translateY(18px)",
+          transitionDelay: loaded ? "950ms" : "0ms",
+        }}
+      >
+        {HERO_CATEGORIES.map((cat, i) => {
+          const isActive = i === activeIndex;
+          return (
+            <button
+              key={cat.slug}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-label={`Pokaż kategorię ${cat.name}`}
+              onClick={() => setActive(i)}
+              className={`h-1.5 cursor-pointer rounded-full border-0 transition-all duration-300 ${
+                isActive
+                  ? "w-6 bg-accent"
+                  : "w-1.5 bg-dim hover:bg-muted"
+              }`}
+            />
+          );
+        })}
       </div>
 
       {/* Stats bar — flow on mobile, absolute on md+ */}

@@ -6,6 +6,7 @@ import { Process } from "./(landing)/_sections/process";
 import { Stats } from "./(landing)/_sections/stats";
 import { Kontakt } from "./(landing)/_sections/kontakt";
 import { Footer } from "./(landing)/_sections/footer";
+import { HeroCategoryProvider } from "./(landing)/_components/hero-category-provider";
 import { StickyCallCTA } from "@/components/sticky-call-cta";
 import { CONTACT } from "@/content/landing";
 
@@ -45,9 +46,11 @@ export default function Home() {
       />
       <Nav />
       <main className="pb-20 md:pb-0">
-        <Hero />
-        <Process />
-        <Specjalizacje />
+        <HeroCategoryProvider>
+          <Hero />
+          <Process />
+          <Specjalizacje />
+        </HeroCategoryProvider>
         <Realizacje />
         <Stats />
         <Kontakt />

@@ -18,6 +18,8 @@ import {
 import { useScrollReveal } from "@/lib/animations/useScrollReveal";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsapConfig";
 import { SPECS, SPEC_TITLE_LINES, type SpecIcon } from "@/content/landing";
+import { HERO_CATEGORIES } from "@/content/hero-categories";
+import { useHeroCategory } from "../_components/hero-category-provider";
 
 const ICONS: Record<SpecIcon, LucideIcon> = {
   Building2,
@@ -57,6 +59,55 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
     >
       {children}
     </h2>
+  );
+}
+
+function CategoryTabs() {
+  const { activeIndex, setActive } = useHeroCategory();
+
+  const handleClick = (i: number) => {
+    setActive(i);
+    if (typeof document !== "undefined") {
+      document
+        .getElementById("hero")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  return (
+    <div
+      role="tablist"
+      aria-label="Kategorie hero"
+      className="flex flex-wrap items-center gap-x-5 gap-y-3 mb-8 md:mb-12"
+      data-reveal
+    >
+      {HERO_CATEGORIES.map((cat, i) => {
+        const isActive = i === activeIndex;
+        return (
+          <button
+            key={cat.slug}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => handleClick(i)}
+            className={`group relative cursor-pointer bg-transparent border-0 p-0 pb-1 font-sans font-medium text-[13px] md:text-sm uppercase tracking-wider transition-colors min-h-11 ${
+              isActive
+                ? "text-accent"
+                : "text-muted hover:text-text"
+            }`}
+          >
+            {cat.name}
+            <span
+              aria-hidden
+              className={`absolute left-0 bottom-0 h-[2px] bg-accent transition-transform duration-300 ease-out origin-left ${
+                isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-50"
+              }`}
+              style={{ width: "100%" }}
+            />
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -127,6 +178,8 @@ export function Specjalizacje() {
             {SPEC_TITLE_LINES[1]}
           </SectionTitle>
         </div>
+
+        <CategoryTabs />
 
         <div
           ref={gridRef}
