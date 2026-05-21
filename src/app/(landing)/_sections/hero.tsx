@@ -311,17 +311,45 @@ export function Hero() {
           </span>
         </h1>
 
-        <p
-          className="font-sans font-light text-muted leading-relaxed max-w-[520px] mb-3 whitespace-pre-line transition-all duration-700"
+        <div
+          className="max-w-[520px] mb-6 transition-all duration-700"
           style={{
-            fontSize: "clamp(14px,1.6vw,17px)",
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(18px)",
             transitionDelay: loaded ? "750ms" : "0ms",
           }}
         >
-          {HERO.lead}
-        </p>
+          <p
+            className="font-display font-bold text-text leading-tight mb-3"
+            style={{
+              fontSize: "clamp(18px,2.2vw,24px)",
+              letterSpacing: "-.015em",
+            }}
+          >
+            {HERO.subtitle}
+          </p>
+          <p
+            className="font-sans font-light text-muted leading-relaxed mb-5"
+            style={{ fontSize: "clamp(14px,1.6vw,17px)" }}
+          >
+            {HERO.description}
+          </p>
+          <ul className="list-none flex flex-col gap-2.5">
+            {HERO.points.map((p) => (
+              <li
+                key={p}
+                className="font-sans font-light text-text leading-relaxed pl-5 relative"
+                style={{ fontSize: "clamp(14px,1.55vw,16px)" }}
+              >
+                <span
+                  className="absolute left-0 top-[0.7em] w-2.5 h-px bg-accent"
+                  aria-hidden
+                />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div
           className="mb-10 transition-all duration-700"
