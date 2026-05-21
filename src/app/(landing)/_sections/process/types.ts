@@ -11,4 +11,5 @@ export interface ProcessStep {
   caseLabel?: string;
   caseLink: string;
   image?: string;
+  embed?: string;
 }

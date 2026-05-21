@@ -34,6 +34,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     ],
     caseLabel: "Star Dental",
     caseLink: "#real",
+    embed: "/process/etap-02.html",
   },
   {
     id: "budowa",

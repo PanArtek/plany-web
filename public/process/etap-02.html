@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Etap 02 — kosztorys</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0D0B09;
+    --bg-alt: #141210;
+    --paper: #1A1714;
+    --ink: #E2D9CE;
+    --muted: #9A8E7E;
+    --dim: #5E564A;
+    --accent: #C4A97D;
+    --accent-bg: rgba(196,169,125,.1);
+    --heading: #E2D9CE;
+    --val: #C4A97D;
+    --total: #C4A97D;
+    --total-bg: rgba(196,169,125,.1);
+    --grid: #2A2622;
+    --line: #2A2622;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; min-height: 100vh; background: var(--bg); }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 300;
+    padding: 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--bg-alt); border: 1px solid var(--line); padding: 4px;
+  }
+  .tab {
+    padding: 8px 18px; border: none; background: transparent;
+    cursor: pointer; font: 500 12px/1 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: var(--muted); letter-spacing: .03em;
+    transition: all .15s;
+  }
+  .tab.active { background: var(--accent); color: var(--bg); }
+  .tab:hover:not(.active) { background: var(--bg); color: var(--ink); }
+
+  .controls {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .btn {
+    padding: 6px 14px; border: 1px solid var(--line);
+    background: var(--bg-alt); color: var(--muted);
+    font: 500 12px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer;
+    transition: all .15s; letter-spacing: .03em;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary:hover { background: #D4BA8E; color: var(--bg); }
+
+  .frame {
+    width: min(92vw, 720px);
+    aspect-ratio: 4/5;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 28px 32px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+
+  .doc-header {
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .doc-header h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 18px; color: var(--ink); font-weight: 700;
+    letter-spacing: -.3px;
+  }
+  .doc-header .company {
+    font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.5;
+  }
+  .doc-header .meta {
+    font-size: 9.5px; color: var(--muted); text-align: right; line-height: 1.6;
+  }
+  .doc-header .meta strong { color: var(--ink); }
+
+  .offer-title {
+    font-size: 11px; color: var(--ink); margin-bottom: 12px;
+    font-style: italic; padding: 6px 10px;
+    background: var(--bg-alt); border-left: 3px solid var(--accent);
+  }
+
+  .table-wrap {
+    flex: 1; overflow: hidden;
+    display: flex; flex-direction: column;
+    font-size: 9.5px; line-height: 1.45;
+  }
+
+  /* === PODSUMOWANIE === */
+  .sum-colhead {
+    display: grid;
+    grid-template-columns: 36px 1fr 100px;
+    gap: 10px;
+    background: rgba(196,169,125,.08);
+    color: var(--accent); font-weight: 600;
+    padding: 7px 10px;
+    font-size: 9.5px;
+    letter-spacing: .03em;
+  }
+  .sum-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 100px;
+    gap: 10px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--grid);
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeRow .25s ease-out forwards;
+  }
+  .sum-row:nth-child(even) { background: rgba(255,255,255,.02); }
+  .sum-row .id { color: var(--dim); font-weight: 600; font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
+  .sum-row .val { text-align: right; font-weight: 700; color: var(--val); font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
+  .sum-row .val.zero { color: var(--dim); font-weight: 500; }
+
+  /* === SZCZEGÓŁOWY (tylko ilość + j.m.) === */
+  .det-colhead {
+    display: grid;
+    grid-template-columns: 1fr 80px 60px;
+    gap: 10px;
+    background: rgba(196,169,125,.08);
+    color: var(--accent); font-weight: 600;
+    padding: 7px 10px;
+    font-size: 9.5px;
+    letter-spacing: .03em;
+  }
+  .det-colhead .num { text-align: right; }
+  .det-colhead .unit { text-align: center; }
+  .det-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 60px;
+    gap: 10px;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--grid);
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeRow .2s ease-out forwards;
+    font-size: 9.5px;
+  }
+  .det-row:nth-child(even) { background: rgba(255,255,255,.02); }
+  .det-row .desc { line-height: 1.35; }
+  .det-row .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--val); font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
+  .det-row .unit { text-align: center; color: var(--muted); font-weight: 600; }
+  .det-row.section {
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-weight: 600;
+    border-left: 3px solid var(--accent);
+    margin-top: 4px;
+    padding: 6px 10px 6px 12px;
+    font-size: 10px;
+    letter-spacing: .4px;
+  }
+  .det-row.section > *:not(.desc) { display: none; }
+  .det-row.section .desc { grid-column: 1 / -1; }
+
+  .rows-area {
+    flex: 1; overflow-y: auto; margin-top: 4px;
+    scrollbar-width: thin; scrollbar-color: var(--dim) transparent;
+  }
+  .rows-area::-webkit-scrollbar { width: 4px; }
+  .rows-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+  /* === TOTAL === */
+  .total {
+    margin-top: 12px;
+    padding-top: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 2px solid var(--ink);
+  }
+  .total .label {
+    font-size: 13px; color: var(--ink); font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .total .amount {
+    font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+    font-size: 22px; font-weight: 800;
+    color: var(--total);
+    background: var(--total-bg);
+    padding: 6px 14px;
+    border: 1.5px solid var(--total);
+    font-variant-numeric: tabular-nums;
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  .total .amount.visible { opacity: 1; }
+
+  @keyframes fadeRow {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .hint {
+    color: var(--dim); font-size: 11px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="tabs">
+    <button class="tab active" data-view="summary">📊 PODSUMOWANIE</button>
+    <button class="tab" data-view="detailed">📋 SZCZEGÓŁOWY</button>
+  </div>
+  <button class="btn primary" id="replay">▶ Odtwórz</button>
+</div>
+
+<div class="frame">
+  <div class="doc-header">
+    <div>
+      <h1>KOSZTORYS <span id="docType">— PODSUMOWANIE</span></h1>
+      <div class="company">PLANY Sp. z o.o. • ul. Długa 29, 00-238 Warszawa</div>
+    </div>
+    <div class="meta">
+      <strong>DATA:</strong> 2026-05-18<br>
+      <strong>REWIZJA:</strong> 0.0<br>
+      <strong>NR:</strong> MG/2026/05
+    </div>
+  </div>
+
+  <div class="offer-title">
+    Oferta na przebudowę lokalu biurowego
+  </div>
+
+  <div class="table-wrap" id="table"></div>
+
+  <div class="total">
+    <span class="label">WARTOŚĆ OFERTY (netto)</span>
+    <span class="amount" id="amount">0,00 zł</span>
+  </div>
+</div>
+
+<div class="hint">Kliknij zakładkę aby przełączyć widok</div>
+
+<script>
+const summary = [
+  ['1.1',  'PRACE BUDOWLANE — PRACE PRZYGOTOWAWCZE', 19626.42],
+  ['1.3',  'PRACE BUDOWLANE — DEMONTAŻE',            18544.60],
+  ['1.4',  'PRACE BUDOWLANE — ŚCIANY DZIAŁOWE',      94050.50],
+  ['1.5',  'PRACE BUDOWLANE — WYKOŃCZENIE ŚCIAN',    42279.00],
+  ['1.6',  'PRACE BUDOWLANE — POSADZKI',             70866.32],
+  ['1.7',  'PRACE BUDOWLANE — SUFITY PODWIESZANE',   46315.90],
+  ['1.8',  'STOLARKA DRZWIOWA WEWNĘTRZNA',           43240.00],
+  ['1.9',  'PRACE ELEKTRYCZNE — DEMONTAŻE',          6708.00],
+  ['1.10', 'PRACE ELEKTRYCZNE — TRASY KABLOWE',      6694.89],
+  ['1.11', 'PRACE ELEKTRYCZNE — OŚWIETLENIE OGÓLNE', 49534.54],
+  ['1.12', 'PRACE ELEKTRYCZNE — INSTALACJA SIŁOWA',  29494.30],
+  ['1.13', 'NISKOPRĄDOWE — OKABLOWANIE LAN',         69842.03],
+  ['1.14', 'NISKOPRĄDOWE — ACCESS POINT',            0],
+  ['1.15', 'NISKOPRĄDOWE — KONTROLA DOSTĘPU',        364.00],
+  ['1.16', 'NISKOPRĄDOWE — CCTV',                    756.99],
+  ['1.17', 'SANITARNE — WOD-KAN',                    4600.00],
+  ['1.19', 'SANITARNE — WENTYLACJA MECHANICZNA',     16100.00],
+  ['1.20', 'HVAC — KLIMATYZACJA',                    13440.00],
+  ['1.21', 'DOKUMENTACJA POWYKONAWCZA',              12041.20],
+];
+
+const detailed = [
+  ['PRACE PRZYGOTOWAWCZE', 'section'],
+  ['Zabezpieczenie powierzchni — folia ochronna', '484,23', 'm²', 16.70, '8 088,58'],
+  ['Zabezpieczenie windy — płyta OSB, styropian', '1', 'kpl.', 2537.50, '2 537,50'],
+  ['Kontener na odpady BDO 7m³', '63', 'm²', 142.86, '9 000,34'],
+
+  ['DEMONTAŻE', 'section'],
+  ['Demontaż okładzin ściennych karton-gips', '42,36', 'm²', 42.53, '1 801,36'],
+  ['Demontaż sufitów podwieszanych mineralnych', '466,33', 'm²', 19.32, '9 008,80'],
+  ['Demontaż stolarki drzwiowej', '6', 'kpl.', 135.58, '813,48'],
+  ['Demontaż wykładziny dywanowej', '466,33', 'm²', 10.80, '5 036,36'],
+  ['Demontaż płytki ceramicznej (ściana)', '26,40', 'm²', 33.75, '891,00'],
+  ['Demontaż gresu (podłoga)', '8', 'm²', 56.70, '453,60'],
+  ['Demontaż armatury sanitarnej', '1', 'kpl.', 540, '540,00'],
+
+  ['ŚCIANY DZIAŁOWE', 'section'],
+  ['Ściana Nida 125A75/EXPERT EI60 Rw58', '162,68', 'm²', 320.15, '52 082,16'],
+  ['Przedścianka C75-25 NIDA TYNK WODA', '11,60', 'm²', 270.16, '3 133,88'],
+  ['Otwory drzwiowe — Profil UA100', '56', 'mb.', 77.71, '4 351,54'],
+  ['Wzmocnienie RIGIPS PRO HABITO DFRI', '4', 'kpl.', 378, '1 512,00'],
+  ['Ściana mobilna akustyczna Optimal 110', '13,77', 'm²', 2152.51, '29 640,09'],
+  ['Obudowa toru jezdnego ściany mobilnej', '10,20', 'mb.', 326.55, '3 330,83'],
+
+  ['WYKOŃCZENIE ŚCIAN', 'section'],
+  ['Malowanie Tikkurila Optiva (nowoprojektowane)', '325,36', 'm²', 33.75, '10 980,90'],
+  ['Malowanie ścian istniejących + opaska', '732,69', 'm²', 33.75, '24 728,29'],
+  ['Szpachlowanie pęknięć (założono 20%)', '146,54', 'm²', 44.83, '6 569,81'],
+
+  ['POSADZKI', 'section'],
+  ['Wykładzina dywanowa', '466,33', 'm²', 136.80, '63 793,94'],
+  ['Listwa przypodłogowa PVC', '374,20', 'mb.', 18.90, '7 072,38'],
+
+  ['SUFITY PODWIESZANE', 'section'],
+  ['Konstrukcja T15 — sufit modułowy', '466,33', 'm²', 65, '30 311,45'],
+  ['Kaseton nowy', '139,90', 'm²', 78, '10 912,12'],
+  ['Montaż kasetonów z demontażu', '326,43', 'm²', 15.60, '5 092,32'],
+
+  ['STOLARKA ALU-SZKLANA', 'section'],
+  ['Drzwi ACS 50 (B=900, H=2050)', '8', 'kpl.', 5405, '43 240,00'],
+
+  ['ELEKTRYKA — DEMONTAŻE', 'section'],
+  ['Demontaż opraw oświetleniowych', '104', 'kpl.', 19.50, '2 028,00'],
+  ['Demontaż okablowania LAN', '1', 'kpl.', 1560, '1 560,00'],
+  ['Dostosowanie instalacji elektrycznej', '1', 'kpl.', 3120, '3 120,00'],
+
+  ['ELEKTRYKA — TRASY KABLOWE', 'section'],
+  ['Rura elektroinstalacyjna nastropowa', '91,63', 'mb.', 11.78, '1 079,16'],
+  ['Prowadzenie kabli w ścianach G/K', '297', 'mb.', 7.79, '2 312,74'],
+  ['Prowadzenie kabli podłoga techniczna', '372', 'mb.', 8.88, '3 302,99'],
+
+  ['OŚWIETLENIE OGÓLNE', 'section'],
+  ['Panel LED BLINGO IP65 40W podtynkowy', '134', 'szt.', 195, '26 130,00'],
+  ['Downlight bez zasilacza', '7', 'szt.', 497.89, '3 485,21'],
+  ['Oprawa awaryjna OWA FL 00 (typ 1)', '6', 'szt.', 490.17, '2 940,99'],
+  ['Oprawa awaryjna OWA FL 00 (typ 2)', '7', 'szt.', 490.17, '3 431,16'],
+  ['Oprawa ewakuacyjna PRIMOS III SGN', '7', 'szt.', 334.82, '2 343,71'],
+  ['Oprawa ewakuacyjna CRYSTAL II SGN', '4', 'szt.', 371.48, '1 485,90'],
+  ['Łączniki jednobiegunowe', '2', 'szt.', 55.19, '110,37'],
+  ['Łączniki świecznikowe', '14', 'szt.', 64.64, '904,90'],
+  ['Przyciski zwierne', '9', 'szt.', 61.91, '557,15'],
+  ['Czujki ruchu', '6', 'szt.', 85.80, '514,80'],
+  ['Kable wielożyłowe typ 1', '423', 'mb.', 9.75, '4 124,25'],
+  ['Kable wielożyłowe typ 2', '310', 'mb.', 11.31, '3 506,10'],
+
+  ['INSTALACJA SIŁOWA', 'section'],
+  ['Wypust instalacji siłowej (kabel bezhalogenowy)', '820', 'mb.', 11.71, '9 604,66'],
+  ['Gniazdo wtykowe natynkowe', '14', 'szt.', 53.77, '752,75'],
+  ['Gniazdo wtykowe IP44', '12', 'szt.', 73.13, '877,50'],
+  ['Relokacja puszek podłogowych', '53', 'szt.', 100.10, '5 305,30'],
+  ['Gniazdo zasilające kątowe (puszki podłogowe)', '119', 'szt.', 44.07, '5 244,33'],
+  ['Gniazdo DATA (puszki podłogowe)', '66', 'szt.', 45.63, '3 011,58'],
+  ['Modernizacja układu licznikowania', '1', 'szt.', 1973.37, '1 973,37'],
+  ['Modernizacja rozdzielni', '1', 'szt.', 1820, '1 820,00'],
+  ['Zabezpieczenie ppoż. przejść kablowych', '2', 'szt.', 452.40, '904,80'],
+
+  ['NISKOPRĄDOWE — LAN', 'section'],
+  ['Szafa RACK', '1', 'szt.', 3146.27, '3 146,27'],
+  ['Okablowanie F/FTP kat.6A LSZH', '5940', 'mb.', 9.38, '55 740,96'],
+  ['Okablowanie WiFi F/UTP kat.6', '105', 'mb.', 9.07, '952,56'],
+  ['Keystone RJ45 w panelu', '138', 'szt.', 32.43, '4 474,93'],
+  ['Keystone RJ45 w gniazdach abonenckich', '138', 'szt.', 40.05, '5 527,31'],
+
+  ['NISKOPRĄDOWE — KD / CCTV', 'section'],
+  ['Relokacja czytników KD', '1', 'kpl.', 364, '364,00'],
+  ['Okablowanie CCTV F/UTP kat.6 LSZH', '90', 'mb.', 8.41, '756,99'],
+
+  ['SANITARNE', 'section'],
+  ['Dostosowanie instalacji wod-kan', '1', 'kpl.', 4600, '4 600,00'],
+  ['Modernizacja wentylacji mechanicznej', '1', 'kpl.', 16100, '16 100,00'],
+
+  ['HVAC', 'section'],
+  ['Klimatyzator split — serwerownia', '1', 'kpl.', 13440, '13 440,00'],
+
+  ['DOKUMENTACJA POWYKONAWCZA', 'section'],
+  ['Dokumentacja architektura (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
+  ['Dokumentacja elektryka (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
+  ['Dokumentacja sanitarna (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
+  ['Pomiar natężenia oświetlenia', '437', 'pkt.', 2.60, '1 136,20'],
+  ['Pomiar parametrów instalacji elektrycznej', '46', 'pkt.', 32.50, '1 495,00'],
+  ['Pomiar okablowania strukturalnego FLUKE', '68', 'pkt.', 32.50, '2 210,00'],
+];
+
+const TOTAL = 544498.67;
+const fmtPLN = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtVal = (n) => fmtPLN.format(n);
+
+let currentView = 'summary';
+let timeouts = [];
+
+function clearTimeouts() {
+  timeouts.forEach(t => clearTimeout(t));
+  timeouts = [];
+}
+
+function render(view) {
+  clearTimeouts();
+  currentView = view;
+  document.getElementById('docType').textContent = view === 'summary' ? '— PODSUMOWANIE' : '— ZAKRES PRAC';
+  const amountEl = document.getElementById('amount');
+  const totalEl = document.querySelector('.total');
+  amountEl.classList.remove('visible');
+  amountEl.textContent = '0,00 zł';
+
+  if (view === 'detailed') {
+    totalEl.style.display = 'none';
+  } else {
+    totalEl.style.display = 'flex';
+  }
+
+  const tableEl = document.getElementById('table');
+  tableEl.innerHTML = '';
+
+  if (view === 'summary') {
+    const head = document.createElement('div');
+    head.className = 'sum-colhead';
+    head.innerHTML = '<span>Lp.</span><span>Dział</span><span style="text-align:right">Wartość [zł]</span>';
+    tableEl.appendChild(head);
+
+    const area = document.createElement('div');
+    area.className = 'rows-area';
+    tableEl.appendChild(area);
+
+    summary.forEach((item, idx) => {
+      const t = setTimeout(() => {
+        const row = document.createElement('div');
+        row.className = 'sum-row';
+        const isZero = item[2] === 0;
+        row.innerHTML = `
+          <span class="id">${item[0]}</span>
+          <span>${item[1]}</span>
+          <span class="val ${isZero ? 'zero' : ''}">${isZero ? '—' : fmtVal(item[2])}</span>
+        `;
+        area.appendChild(row);
+      }, idx * 200);
+      timeouts.push(t);
+    });
+
+    const totalDelay = summary.length * 200 + 300;
+    timeouts.push(setTimeout(() => animateTotal(amountEl), totalDelay));
+
+  } else {
+    const head = document.createElement('div');
+    head.className = 'det-colhead';
+    head.innerHTML = `
+      <span>Opis pozycji</span>
+      <span class="num">Ilość</span>
+      <span class="unit">j.m.</span>
+    `;
+    tableEl.appendChild(head);
+
+    const area = document.createElement('div');
+    area.className = 'rows-area';
+    tableEl.appendChild(area);
+
+    detailed.forEach((item, idx) => {
+      const t = setTimeout(() => {
+        const row = document.createElement('div');
+        const isSec = item[1] === 'section';
+        row.className = 'det-row' + (isSec ? ' section' : '');
+        if (isSec) {
+          row.innerHTML = `<span class="desc">▸ ${item[0]}</span>`;
+        } else {
+          row.innerHTML = `
+            <span class="desc">${item[0]}</span>
+            <span class="num">${item[1]}</span>
+            <span class="unit">${item[2]}</span>
+          `;
+        }
+        area.appendChild(row);
+        area.scrollTop = area.scrollHeight;
+      }, idx * 90);
+      timeouts.push(t);
+    });
+  }
+}
+
+function animateTotal(el) {
+  el.classList.add('visible');
+  const duration = 1400;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmtVal(TOTAL * eased) + ' zł';
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.view);
+  });
+});
+
+document.getElementById('replay').addEventListener('click', () => render(currentView));
+
+render('summary');
+</script>
+</body>
+</html>
