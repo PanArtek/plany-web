@@ -194,14 +194,39 @@ export function Hero() {
             style={{ opacity: i === activeIndex ? 1 : 0 }}
           >
             {cat.image ? (
-              <Image
-                src={cat.image}
-                alt=""
-                fill
-                sizes="100vw"
-                priority={i === 0}
-                className="object-cover object-center"
-              />
+              cat.imageMobile ? (
+                <>
+                  <div className="absolute inset-0 md:hidden">
+                    <Image
+                      src={cat.imageMobile}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      priority={i === 0}
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <div className="absolute inset-0 hidden md:block">
+                    <Image
+                      src={cat.image}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      priority={i === 0}
+                      className="object-cover object-center"
+                    />
+                  </div>
+                </>
+              ) : (
+                <Image
+                  src={cat.image}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  priority={i === 0}
+                  className="object-cover object-center"
+                />
+              )
             ) : (
               <div
                 className="absolute inset-0"

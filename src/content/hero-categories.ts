@@ -2,12 +2,14 @@ export type HeroCategoryName =
   | "Medycyna"
   | "Edukacja"
   | "Gastronomia"
-  | "Biura";
+  | "Biura"
+  | "Inne +";
 
 export type HeroCategory = {
   name: HeroCategoryName;
   slug: string;
   image: string | null;
+  imageMobile?: string | null;
   grad: string;
 };
 
@@ -33,8 +35,15 @@ export const HERO_CATEGORIES: readonly HeroCategory[] = [
   {
     name: "Biura",
     slug: "biura",
-    image: "/hero/biura.jpg",
+    image: "/hero/biura-desktop.jpg",
+    imageMobile: "/hero/biura-mobile.jpg",
     grad: "linear-gradient(135deg,#12141A 0%,#181C24 45%,#101318 100%)",
+  },
+  {
+    name: "Inne +",
+    slug: "inne",
+    image: null,
+    grad: "linear-gradient(135deg,#100E0C 0%,#1A1814 50%,#100E0C 100%)",
   },
 ] as const;
 
