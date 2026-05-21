@@ -29,7 +29,7 @@ export const HERO = {
   ctaSecondary: "Realizacje",
   stats: [
     { v: "10+", l: "lat doświadczenia" },
-    { v: "35+", l: "osób w zespole" },
+    { v: "40+", l: "osób w zespole" },
   ],
 } as const;
 
@@ -274,7 +274,7 @@ export type StepIcon = (typeof STEPS)[number]["icon"];
 
 export const STATS = [
   { end: 10, sfx: "+", unit: "lat", lbl: "doświadczenia" },
-  { end: 30, sfx: "", unit: "", lbl: "specjalistów w zespole" },
+  { end: 40, sfx: "+", unit: "", lbl: "specjalistów w zespole" },
   { end: 200, sfx: "+", unit: "", lbl: "ukończonych projektów" },
   { end: 10, sfx: "M", unit: "PLN", lbl: "wartość projektu" },
 ] as const;
