@@ -11,7 +11,7 @@ import {
 } from "react";
 import { HERO_CATEGORIES } from "@/content/hero-categories";
 
-const AUTO_ADVANCE_MS = 2500;
+const AUTO_ADVANCE_MS = 5000;
 const CATEGORY_COUNT = HERO_CATEGORIES.length;
 
 type HeroCategoryContextValue = {
