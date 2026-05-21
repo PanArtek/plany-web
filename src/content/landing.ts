@@ -16,7 +16,7 @@ export const NAV_EYEBROW = ["Pomysł", "PLANY", "Przestrzeń"] as const;
 export const HERO = {
   titleLine1: "Realizujemy",
   titleAccent: "PLANY",
-  lead: "Generalny wykonawca i podwykonawca dla wiodących firm budowlanych.\nJeden kierownik na twój projekt. Stały zespół wykonawczy zgrany od lat. Zintegrowani podwykonawcy i dostawcy.",
+  lead: "Budowa wnętrz komercyjnych\nGeneralny wykonawca i podwykonawca dla wiodących firm budowlanych.\nJeden kierownik prowadzi twój projekt. Stały zespół wykonawczy zgrany od lat, 40+ własnych pracowników. Zintegrowani podwykonawcy i dostawcy.",
   specRotator: [
     "Medycyna",
     "Edukacja",
