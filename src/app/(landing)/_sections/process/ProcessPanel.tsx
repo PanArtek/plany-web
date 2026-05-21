@@ -23,7 +23,7 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
       className={cn(
         "relative overflow-hidden",
         step.embed
-          ? "aspect-[4/5] min-[900px]:aspect-[4/5] min-[900px]:max-w-[720px] min-[900px]:mx-auto"
+          ? "aspect-[4/5] max-w-[720px] mx-auto border border-line"
           : "aspect-[3/4] min-[900px]:aspect-[16/9] min-[900px]:min-h-[560px]",
         isActive
           ? "relative"
