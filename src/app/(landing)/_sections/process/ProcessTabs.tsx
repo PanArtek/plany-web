@@ -260,9 +260,11 @@ export function ProcessTabs() {
         aria-label="Etapy procesu"
         onKeyDown={handleKeyDown}
         data-lenis-prevent
-        className="overflow-x-auto scroll-snap-type-x-mandatory min-[900px]:overflow-visible min-[900px]:grid min-[900px]:grid-cols-5 border-t border-b border-line mb-16 min-[900px]:mb-20"
+        className="flex overflow-x-auto min-[900px]:overflow-visible min-[900px]:grid min-[900px]:grid-cols-5 border-t border-b border-line mb-10 min-[900px]:mb-20 -mx-[var(--section-pad)] px-[var(--section-pad)] min-[900px]:mx-0 min-[900px]:px-0"
         style={{
           scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
         }}
       >
         {PROCESS_STEPS.map((step, i) => (

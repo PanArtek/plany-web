@@ -30,19 +30,19 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
       <ProcessMedia step={step} isActive={isActive} priority={index === 0} />
 
       {/* Content side */}
-      <div className="pt-8 min-[900px]:py-10 overflow-hidden">
+      <div className="pt-6 min-[900px]:py-10 overflow-hidden">
         {/* 1. Eyebrow */}
         <div
           data-panel-content
-          className="flex items-center gap-4 mb-8"
+          className="flex items-center gap-3 min-[900px]:gap-4 mb-5 min-[900px]:mb-8"
         >
-          <span className="font-display italic text-[56px] leading-none text-accent">
+          <span className="font-display italic text-[36px] min-[900px]:text-[56px] leading-none text-accent">
             {step.num}
           </span>
-          <span className="font-sans text-[11px] tracking-[0.25em] uppercase text-muted">
+          <span className="font-sans text-[10px] min-[900px]:text-[11px] tracking-[0.25em] uppercase text-muted">
             {step.label}
           </span>
-          <span className="ml-auto font-sans text-[11px] text-dim py-1 px-2.5 border border-line">
+          <span className="ml-auto font-sans text-[10px] min-[900px]:text-[11px] text-dim py-1 px-2.5 border border-line">
             {step.duration}
           </span>
         </div>
@@ -50,8 +50,7 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
         {/* 2. Title */}
         <h3
           data-panel-content
-          className="font-display font-normal leading-[1.05] tracking-[-0.015em] text-text mb-8"
-          style={{ fontSize: "clamp(40px, 4vw, 64px)" }}
+          className="font-display font-normal leading-[1.05] tracking-[-0.015em] text-text mb-5 min-[900px]:mb-8 text-[28px] min-[900px]:text-[clamp(40px,4vw,64px)]"
         >
           {step.title} <em className="italic text-accent">{step.titleEm}</em>
         </h3>
@@ -59,7 +58,7 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
         {/* 3. Deliverable */}
         <p
           data-panel-content
-          className="font-display text-[22px] leading-[1.4] text-text/85 italic pl-5 border-l border-accent mb-8"
+          className="font-display text-[17px] min-[900px]:text-[22px] leading-[1.4] text-text/85 italic pl-4 min-[900px]:pl-5 border-l border-accent mb-5 min-[900px]:mb-8"
         >
           {step.deliverable}
         </p>
@@ -67,17 +66,17 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
         {/* 4. Body */}
         <p
           data-panel-content
-          className="font-sans text-base leading-[1.7] text-muted font-light mb-10"
+          className="font-sans text-sm min-[900px]:text-base leading-[1.7] text-muted font-light mb-6 min-[900px]:mb-10"
         >
           {step.body}
         </p>
 
         {/* 5. Proof points */}
-        <ul data-panel-content className="list-none mb-12">
+        <ul data-panel-content className="list-none mb-8 min-[900px]:mb-12">
           {step.proof.map((point) => (
             <li
               key={point}
-              className="flex items-start gap-3 py-3 border-t border-line/50 font-sans text-xs tracking-[0.05em] text-text/85 last:border-b last:border-line/50"
+              className="flex items-start gap-3 py-2.5 min-[900px]:py-3 border-t border-line/50 font-sans text-[11px] min-[900px]:text-xs tracking-[0.05em] text-text/85 last:border-b last:border-line/50"
             >
               <span className="text-accent font-display italic shrink-0">
                 →
@@ -91,7 +90,7 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
         <a
           data-panel-content
           href={step.caseLink}
-          className="inline-flex items-center gap-2 font-sans text-[11px] tracking-[0.2em] uppercase text-muted pb-1 border-b border-line transition-colors hover:text-accent hover:border-accent"
+          className="inline-flex items-center gap-2 font-sans text-[10px] min-[900px]:text-[11px] tracking-[0.2em] uppercase text-muted pb-1 border-b border-line transition-colors hover:text-accent hover:border-accent"
         >
           <span>
             {step.caseLabel

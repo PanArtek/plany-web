@@ -24,17 +24,20 @@ export const ProcessTab = forwardRef<HTMLButtonElement, ProcessTabProps>(
         aria-controls={panelId}
         tabIndex={isActive ? 0 : -1}
         onClick={onClick}
-        className={cn(tabVariants({ state: isActive ? "active" : "idle" }))}
+        className={cn(
+          tabVariants({ state: isActive ? "active" : "idle" }),
+          "snap-start",
+        )}
       >
-        <span className="block font-display italic text-[32px] leading-none mb-3 text-accent">
+        <span className="block font-display italic text-[24px] min-[900px]:text-[32px] leading-none mb-2 min-[900px]:mb-3 text-accent">
           {step.num}
         </span>
-        <span className="block font-sans text-[10px] tracking-[0.2em] uppercase mb-1.5">
+        <span className="block font-sans text-[9px] min-[900px]:text-[10px] tracking-[0.2em] uppercase mb-1">
           {step.label} · {step.duration}
         </span>
         <span
           className={cn(
-            "block font-display text-base text-text transition-opacity",
+            "block font-display text-sm min-[900px]:text-base text-text transition-opacity",
             isActive ? "opacity-100" : "opacity-70",
           )}
         >
