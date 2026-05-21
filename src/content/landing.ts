@@ -295,12 +295,32 @@ export const CONTACT = {
   phone: "+48 511 222 252",
   phoneE164: "+48511222252",
   phoneOwner: "Łukasz",
-  email: "biuro@plany.com.pl",
+  email: "lukasz.kochaczewski@plany.com.pl",
   nip: "5253016152",
   regon: "529591804",
   krs: "0001125454",
   description:
     "Fit-out komercyjny — biura, kliniki, szkoły. Od konsultacji po klucz.",
+} as const;
+
+export const OFFICE_HOURS = "pn-pt 8:00-18:00" as const;
+export const RESPONSE_SLA = "Odpowiedź w 24h roboczych" as const;
+
+export const FOUNDER = {
+  name: "Łukasz Kochaczewski",
+  role: "Założyciel",
+  company: "PLANY Sp. z o.o.",
+  monogram: "ŁK",
+  photo: "/team/lukasz-kochaczewski.jpg",
+  quote:
+    "Każdy projekt jest dla nas ważny. Angażuję się w niego osobiście od pierwszej rozmowy po odbiór, dlatego biorę odpowiedzialność za to, co obiecuję.",
+} as const;
+
+export const KONTAKT_INTRO = {
+  p1: "Zadzwoń lub napisz. Pierwsza rozmowa do niczego nie zobowiązuje i zwykle wystarczy, żeby określić realny budżet i harmonogram projektu.",
+  p2: "Nie tylko budujemy. Naszym doświadczeniem wspieramy Twój biznes, od pierwszego szkicu po decyzje, które realnie wpływają na koszt i termin.",
+  tagline:
+    "Bez auto-mailingu. Bez follow-upu na siłę. Odpowiada Łukasz osobiście, szef firmy, nie call center.",
 } as const;
 
 export const QUIZ = {

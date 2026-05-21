@@ -1,11 +1,14 @@
 "use client";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Clock, Phone, Mail, ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/lib/animations/useScrollReveal";
-import { CONTACT, KONTAKT_TITLE_LINES } from "@/content/landing";
-import { Logo } from "@/components/logo";
-import { QuizWizard } from "@/components/quiz/QuizWizard";
-import { PhoneTopBar } from "@/components/quiz/PhoneTopBar";
-import { PhoneCard } from "@/components/quiz/PhoneCard";
+import {
+  CONTACT,
+  FOUNDER,
+  KONTAKT_INTRO,
+  KONTAKT_TITLE_LINES,
+  OFFICE_HOURS,
+  RESPONSE_SLA,
+} from "@/content/landing";
 
 export function Kontakt() {
   const ref = useScrollReveal<HTMLDivElement>({ stagger: 0.12 });
@@ -38,74 +41,161 @@ export function Kontakt() {
           >
             {KONTAKT_TITLE_LINES[0]}
             <br />
-            {KONTAKT_TITLE_LINES[1]}
+            <span className="italic text-muted font-medium">
+              {KONTAKT_TITLE_LINES[1]}
+            </span>
           </h2>
         </div>
 
         <div
-          className="grid gap-8 md:gap-12 lg:gap-16 grid-cols-1 lg:[grid-template-columns:1.15fr_.85fr]"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16"
           data-reveal
         >
-          <div>
-            <PhoneTopBar />
-            <div className="mt-6">
-              <QuizWizard />
+          {/* LEFT — intro + office info */}
+          <div className="lg:col-span-5">
+            <p className="font-sans text-muted leading-relaxed mb-5 max-w-md text-[15px] md:text-[16px]">
+              {KONTAKT_INTRO.p1}
+            </p>
+            <p className="font-sans text-text leading-relaxed mb-10 max-w-md text-[15px] md:text-[16px]">
+              {KONTAKT_INTRO.p2}
+            </p>
+
+            <div className="flex flex-col gap-6 pt-8 border-t border-line">
+              <div className="flex items-start gap-4">
+                <MapPin
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-dim mt-0.5 flex-shrink-0"
+                />
+                <div>
+                  <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
+                    Biuro
+                  </span>
+                  <p className="font-sans text-[14px] text-text leading-relaxed">
+                    {CONTACT.street}
+                    <br />
+                    {CONTACT.postalCode} {CONTACT.city}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <Clock
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-dim mt-0.5 flex-shrink-0"
+                />
+                <div>
+                  <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
+                    Godziny
+                  </span>
+                  <p className="font-sans text-[14px] text-text">
+                    {OFFICE_HOURS}
+                  </p>
+                  <p className="font-sans text-[12px] text-dim mt-1">
+                    {RESPONSE_SLA}
+                  </p>
+                </div>
+              </div>
             </div>
-            <PhoneCard />
           </div>
-          <ContactInfo />
+
+          {/* RIGHT — founder card */}
+          <div className="lg:col-span-7">
+            <FounderCard />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function ContactInfo() {
-  const items = [
-    { Icon: MapPin, l: "Adres", v: CONTACT.address },
-    { Icon: Phone, l: "Telefon", v: CONTACT.phone },
-    { Icon: Mail, l: "Email", v: CONTACT.email },
-  ];
+function FounderCard() {
   return (
-    <aside className="flex flex-col gap-6">
-      <div>
-        <Logo size={28} />
-        <p className="font-sans text-[13px] font-light text-muted leading-relaxed mt-2.5 max-w-[280px]">
-          {CONTACT.description}
+    <div
+      className="bg-bg-alt border border-line"
+      style={{ padding: "clamp(28px,3vw,48px)" }}
+    >
+      <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8 mb-8">
+        {/* Photo placeholder — TODO: dodać /public/team/lukasz-kochaczewski.jpg */}
+        <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-bg-deep border border-line flex items-center justify-center font-display text-3xl text-muted">
+          {FOUNDER.monogram}
+        </div>
+
+        <div className="flex-1">
+          <span className="font-sans text-[11px] tracking-[.2em] text-dim uppercase block mb-2">
+            {FOUNDER.role}
+          </span>
+          <h3
+            className="font-display font-bold text-text tracking-tight mb-1"
+            style={{
+              fontSize: "clamp(22px,2.5vw,30px)",
+              letterSpacing: "-.02em",
+            }}
+          >
+            {FOUNDER.name}
+          </h3>
+          <p className="font-sans text-[13px] text-muted">{FOUNDER.company}</p>
+        </div>
+      </div>
+
+      <div className="border-l-2 border-line pl-5 py-1 mb-10">
+        <p className="font-sans text-text italic leading-relaxed text-[15px] md:text-[16px]">
+          „{FOUNDER.quote}”
         </p>
       </div>
-      <div className="w-full h-px bg-line" aria-hidden />
-      {items.map(({ Icon, l, v }) => (
-        <div key={l} className="flex gap-3 items-start">
-          <Icon
-            size={14}
-            strokeWidth={1.5}
-            className="text-dim mt-0.5 flex-shrink-0"
-          />
-          <div>
-            <div className="font-sans text-[10px] text-dim uppercase tracking-wider mb-0.5">
-              {l}
+
+      <div className="flex flex-col gap-3">
+        <a
+          href={`tel:${CONTACT.phoneE164}`}
+          className="group flex items-center justify-between gap-4 bg-accent text-white px-6 py-5 hover:bg-accent-hover transition-colors min-h-14"
+          aria-label={`Zadzwoń: ${CONTACT.phone}`}
+        >
+          <div className="flex items-center gap-4">
+            <Phone size={20} strokeWidth={1.75} />
+            <div>
+              <div className="font-sans text-[11px] tracking-wider uppercase opacity-70 mb-0.5">
+                Zadzwoń
+              </div>
+              <div className="font-sans font-medium text-[17px]">
+                {CONTACT.phone}
+              </div>
             </div>
-            <div className="font-sans text-[14px] text-text">{v}</div>
           </div>
-        </div>
-      ))}
-      <div className="w-full h-px bg-line" aria-hidden />
-      <div className="w-full aspect-video bg-input-bg border border-line relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[.04]"
-          aria-hidden
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg,#9A8E7E 1px,transparent 1px),linear-gradient(0deg,#9A8E7E 1px,transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
-          <MapPin size={18} strokeWidth={1.2} className="text-accent" />
-          <span className="font-sans text-[11px] text-dim">{CONTACT.address}</span>
-        </div>
+          <ArrowRight
+            size={16}
+            strokeWidth={2}
+            className="opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+          />
+        </a>
+
+        <a
+          href={`mailto:${CONTACT.email}`}
+          className="group flex items-center justify-between gap-4 border border-line bg-transparent px-6 py-5 hover:border-dim hover:bg-bg-deep transition-colors min-h-14"
+          aria-label={`Napisz: ${CONTACT.email}`}
+        >
+          <div className="flex items-center gap-4">
+            <Mail size={20} strokeWidth={1.75} className="text-muted" />
+            <div className="min-w-0">
+              <div className="font-sans text-[11px] tracking-wider uppercase text-dim mb-0.5">
+                Napisz
+              </div>
+              <div className="font-sans font-medium text-[14px] sm:text-[16px] text-text break-all">
+                {CONTACT.email}
+              </div>
+            </div>
+          </div>
+          <ArrowRight
+            size={16}
+            strokeWidth={2}
+            className="text-dim group-hover:text-text group-hover:translate-x-1 transition-all flex-shrink-0"
+          />
+        </a>
       </div>
-    </aside>
+
+      <p className="font-sans text-[12px] text-dim mt-8 leading-relaxed">
+        {KONTAKT_INTRO.tagline}
+      </p>
+    </div>
   );
 }
