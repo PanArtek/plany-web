@@ -53,6 +53,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     ],
     caseLabel: "Hala Koszyki",
     caseLink: "#real",
+    image: "/process/etap-03.webp",
   },
   {
     id: "odbior",
@@ -70,6 +71,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     ],
     caseLabel: "PGE Ogrodowa",
     caseLink: "#real",
+    image: "/process/etap-04.webp",
   },
   {
     id: "serwis",
@@ -87,6 +89,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
       "Jeden kontakt na lata",
     ],
     caseLink: "#kontakt",
+    image: "/process/etap-05.webp",
   },
 ] satisfies ProcessStep[];
 
