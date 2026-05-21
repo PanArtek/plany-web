@@ -51,58 +51,60 @@ export function Kontakt() {
           className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16"
           data-reveal
         >
-          {/* LEFT — intro + office info */}
+          {/* LEFT — intro */}
           <div className="lg:col-span-5">
             <p className="font-sans text-muted leading-relaxed mb-5 max-w-md text-[15px] md:text-[16px]">
               {KONTAKT_INTRO.p1}
             </p>
-            <p className="font-sans text-text leading-relaxed mb-10 max-w-md text-[15px] md:text-[16px]">
+            <p className="font-sans text-text leading-relaxed max-w-md text-[15px] md:text-[16px]">
               {KONTAKT_INTRO.p2}
             </p>
-
-            <div className="flex flex-col gap-6 pt-8 border-t border-line">
-              <div className="flex items-start gap-4">
-                <MapPin
-                  size={18}
-                  strokeWidth={1.5}
-                  className="text-dim mt-0.5 flex-shrink-0"
-                />
-                <div>
-                  <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
-                    Biuro
-                  </span>
-                  <p className="font-sans text-[14px] text-text leading-relaxed">
-                    {CONTACT.street}
-                    <br />
-                    {CONTACT.postalCode} {CONTACT.city}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <Clock
-                  size={18}
-                  strokeWidth={1.5}
-                  className="text-dim mt-0.5 flex-shrink-0"
-                />
-                <div>
-                  <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
-                    Godziny
-                  </span>
-                  <p className="font-sans text-[14px] text-text">
-                    {OFFICE_HOURS}
-                  </p>
-                  <p className="font-sans text-[12px] text-dim mt-1">
-                    {RESPONSE_SLA}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* RIGHT — founder card */}
           <div className="lg:col-span-7">
             <FounderCard />
+          </div>
+        </div>
+
+        {/* Office info — full width at section bottom */}
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-12 pt-10 mt-12 lg:mt-16 border-t border-line"
+          data-reveal
+        >
+          <div className="flex items-start gap-4">
+            <MapPin
+              size={18}
+              strokeWidth={1.5}
+              className="text-dim mt-0.5 flex-shrink-0"
+            />
+            <div>
+              <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
+                Biuro
+              </span>
+              <p className="font-sans text-[14px] text-text leading-relaxed">
+                {CONTACT.street}
+                <br />
+                {CONTACT.postalCode} {CONTACT.city}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4">
+            <Clock
+              size={18}
+              strokeWidth={1.5}
+              className="text-dim mt-0.5 flex-shrink-0"
+            />
+            <div>
+              <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
+                Godziny
+              </span>
+              <p className="font-sans text-[14px] text-text">{OFFICE_HOURS}</p>
+              <p className="font-sans text-[12px] text-dim mt-1">
+                {RESPONSE_SLA}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -116,27 +118,20 @@ function FounderCard() {
       className="bg-bg-alt border border-line"
       style={{ padding: "clamp(28px,3vw,48px)" }}
     >
-      <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8 mb-8">
-        {/* Photo placeholder — TODO: dodać /public/team/lukasz-kochaczewski.jpg */}
-        <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-bg-deep border border-line flex items-center justify-center font-display text-3xl text-muted">
-          {FOUNDER.monogram}
-        </div>
-
-        <div className="flex-1">
-          <span className="font-sans text-[11px] tracking-[.2em] text-dim uppercase block mb-2">
-            {FOUNDER.role}
-          </span>
-          <h3
-            className="font-display font-bold text-text tracking-tight mb-1"
-            style={{
-              fontSize: "clamp(22px,2.5vw,30px)",
-              letterSpacing: "-.02em",
-            }}
-          >
-            {FOUNDER.name}
-          </h3>
-          <p className="font-sans text-[13px] text-muted">{FOUNDER.company}</p>
-        </div>
+      <div className="mb-8">
+        <span className="font-sans text-[11px] tracking-[.2em] text-dim uppercase block mb-2">
+          {FOUNDER.role}
+        </span>
+        <h3
+          className="font-display font-bold text-text tracking-tight mb-1"
+          style={{
+            fontSize: "clamp(22px,2.5vw,30px)",
+            letterSpacing: "-.02em",
+          }}
+        >
+          {FOUNDER.name}
+        </h3>
+        <p className="font-sans text-[13px] text-muted">{FOUNDER.company}</p>
       </div>
 
       <div className="border-l-2 border-line pl-5 py-1 mb-10">
@@ -192,10 +187,6 @@ function FounderCard() {
           />
         </a>
       </div>
-
-      <p className="font-sans text-[12px] text-dim mt-8 leading-relaxed">
-        {KONTAKT_INTRO.tagline}
-      </p>
     </div>
   );
 }
