@@ -12,7 +12,12 @@ Lead generation (formularz → Supabase + mail) + wiarygodność (portfolio)
 + SEO ("fit-out Warszawa", "wykończenia biur Warszawa", "kliniki dentystyczne").
 
 ## Stack
-- Next.js (App Router, TypeScript) — sprawdź wersję w package.json
+- Next.js 16 canary (App Router, TypeScript, React 19)
+- Tailwind CSS v4 + shadcn v4 (Radix UI)
+- CVA + clsx + tailwind-merge (utility pattern)
+- GSAP + @gsap/react + Lenis (animacje + smooth scroll)
+- Lucide React (ikony)
+- Zod v4 + react-hook-form (walidacja formularzy)
 - Supabase (DB + Storage + Edge Functions)
 - Resend (email)
 - Cloudflare Turnstile (antyspam)
