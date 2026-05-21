@@ -1,13 +1,11 @@
 "use client";
-import { MapPin, Clock, Phone, Mail, ArrowRight } from "lucide-react";
+import { MapPin, FileText, Phone, Mail, ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/lib/animations/useScrollReveal";
 import {
   CONTACT,
   FOUNDER,
   KONTAKT_INTRO,
   KONTAKT_TITLE_LINES,
-  OFFICE_HOURS,
-  RESPONSE_SLA,
 } from "@/content/landing";
 
 export function Kontakt() {
@@ -80,9 +78,11 @@ export function Kontakt() {
             />
             <div>
               <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
-                Biuro
+                Adres siedziby
               </span>
               <p className="font-sans text-[14px] text-text leading-relaxed">
+                {CONTACT.companyName}
+                <br />
                 {CONTACT.street}
                 <br />
                 {CONTACT.postalCode} {CONTACT.city}
@@ -91,19 +91,23 @@ export function Kontakt() {
           </div>
 
           <div className="flex items-start gap-4">
-            <Clock
+            <FileText
               size={18}
               strokeWidth={1.5}
               className="text-dim mt-0.5 flex-shrink-0"
             />
             <div>
               <span className="font-sans text-[10px] tracking-wider uppercase text-dim block mb-1">
-                Godziny
+                Dane rejestrowe
               </span>
-              <p className="font-sans text-[14px] text-text">{OFFICE_HOURS}</p>
-              <p className="font-sans text-[12px] text-dim mt-1">
-                {RESPONSE_SLA}
-              </p>
+              <dl className="font-sans text-[14px] text-text leading-relaxed grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+                <dt className="text-dim">NIP</dt>
+                <dd>{CONTACT.nip}</dd>
+                <dt className="text-dim">REGON</dt>
+                <dd>{CONTACT.regon}</dd>
+                <dt className="text-dim">KRS</dt>
+                <dd>{CONTACT.krs}</dd>
+              </dl>
             </div>
           </div>
         </div>
