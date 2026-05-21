@@ -17,6 +17,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     ],
     caseLabel: "LUXVET",
     caseLink: "#real",
+    image: "/process/etap-01.webp",
   },
   {
     id: "dokumentacja",
