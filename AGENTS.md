@@ -1,7 +1,7 @@
 # PLANY.com.pl — kontekst projektu
 
 ## Firma
-PLANY Sp. z o.o. — warszawska firma fit-out (wykończenia komercyjne).
+PLANY Sp. z o.o. — warszawska firma budowy wnętrz komercyjnych.
 30 osób, 10 lat, projekty 100k–10M PLN. Generalny wykonawca i podwykonawca
 (m.in. Strabag). Specjalizacje: biura, kliniki medyczne (dent/wet),
 edukacja, gastronomia, retail. Własna ekipa: 10 elektryków in-house.
@@ -34,7 +34,8 @@ Typografia:
 - Logo: Rubik One — SKONWERTOWANE DO PATHS, nie ładuj jako font
 
 Charakter: ciemny, ciepły, premium nie luksusowy. Minimal, whitespace,
-ostre krawędzie, subtelne fade-in scroll, hover: górna linia accent.
+ostre krawędzie, subtelne fade-in scroll tylko dla kluczowych sekcji
+konwersji (hero, CTA, lead form), hover: górna linia accent.
 
 ## Mobile-first (nienegocjowalne)
 - Każdy komponent piszesz dla 320-560px, potem breakpointy w górę
@@ -48,6 +49,7 @@ ostre krawędzie, subtelne fade-in scroll, hover: górna linia accent.
 - Dane kontaktowe jako placeholdery (XXX-XXX-XX-XX) do podmiany
 - Design tokens w jednym miejscu (CSS vars w globals.css)
 - Bez hardcoded stringów w komponentach (przygotowanie pod i18n PL/EN)
+- "fit-out" zakazane w widocznym copy (h1-h6, paragrafy, buttony, alt text, og:title, og:description). Dozwolone w meta keywords, schema.org JSON-LD, URL slugs i innym niewidocznym SEO.
 - Komponenty SSR domyślnie, "use client" tylko gdy konieczne
 
 ## Komendy
@@ -70,7 +72,7 @@ ostre krawędzie, subtelne fade-in scroll, hover: górna linia accent.
 
 ## Workflow
 Brainstorm → AGENTS.md → writing-plans → prd.json (taski <10 min)
-→ ./ralph.sh --tool claude N → weryfikacja (Lighthouse Mobile + Supabase + Vercel preview)
+→ ./ralph.sh --tool claude N → weryfikacja (build green, Lighthouse Mobile ≥95, no "fit-out" in visible copy, mobile 375px no overflow, no console errors)
 
 ## MCP Servers
 - **gsap-master**: użyj dla animation creation, debugging, performance refactoring.
