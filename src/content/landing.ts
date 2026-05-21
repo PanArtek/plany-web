@@ -34,10 +34,6 @@ export const HERO = {
   ] as const,
   ctaPrimary: "Szybka wycena",
   ctaSecondary: "Realizacje",
-  stats: [
-    { v: "10+", l: "lat doświadczenia" },
-    { v: "40+", l: "osób w zespole" },
-  ],
 } as const;
 
 export const SPEC_TITLE_LINES = ["Każda branża", "ma swoje PLANY."] as const;

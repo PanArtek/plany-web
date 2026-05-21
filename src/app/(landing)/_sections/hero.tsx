@@ -11,19 +11,12 @@ import {
 } from "@/content/hero-categories";
 import { useHeroCategory } from "../_components/hero-category-provider";
 
-function parseStat(v: string): { num: number; suffix: string } {
-  const match = v.match(/(\d+)(\D*)/);
-  if (!match) return { num: 0, suffix: v };
-  return { num: parseInt(match[1], 10), suffix: match[2] || "" };
-}
-
 export function Hero() {
   const { activeIndex, setActive, pause, resume } = useHeroCategory();
   const [loaded, setLoaded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const titleLine1Ref = useRef<HTMLSpanElement>(null);
   const titleAccentRef = useRef<HTMLSpanElement>(null);
-  const statValueRefs = useRef<Array<HTMLDivElement | null>>([]);
   const ctaRef = useRef<HTMLButtonElement>(null);
   const heroImageRef = useRef<HTMLDivElement>(null);
 
@@ -117,49 +110,6 @@ export function Hero() {
     { dependencies: [loaded], scope: sectionRef },
   );
 
-  // Stats counter — animate from 0 to target after loaded.
-  useGSAP(
-    () => {
-      if (!loaded) return;
-      const mm = gsap.matchMedia();
-      mm.add(
-        {
-          motion: "(prefers-reduced-motion: no-preference)",
-          reduced: "(prefers-reduced-motion: reduce)",
-        },
-        (ctx) => {
-          const { reduced } = ctx.conditions as {
-            motion: boolean;
-            reduced: boolean;
-          };
-
-          HERO.stats.forEach((s, i) => {
-            const el = statValueRefs.current[i];
-            if (!el) return;
-            const { num, suffix } = parseStat(s.v);
-            if (reduced) {
-              el.textContent = `${num}${suffix}`;
-              return;
-            }
-            const obj = { val: 0 };
-            gsap.to(obj, {
-              val: num,
-              snap: { val: 1 },
-              duration: 1.2,
-              ease: "power2.out",
-              delay: 1 + i * 0.1,
-              onUpdate: () => {
-                el.textContent = `${Math.round(obj.val)}${suffix}`;
-              },
-            });
-          });
-        },
-      );
-      return () => mm.revert();
-    },
-    { dependencies: [loaded], scope: sectionRef },
-  );
-
   // CTA idle pulse — start after 5s without interaction.
   useGSAP(
     () => {
@@ -228,7 +178,7 @@ export function Hero() {
       ref={sectionRef}
       onMouseEnter={pause}
       onMouseLeave={resume}
-      className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden pb-10 md:pb-[clamp(160px,22vh,220px)]"
+      className="relative min-h-dvh bg-bg flex flex-col justify-center overflow-hidden pb-16 md:pb-40"
       style={{ paddingTop: "max(110px, 13vh)" }}
     >
       {/* Background — 5-layer crossfade stack, full bleed, all viewports */}
@@ -423,45 +373,6 @@ export function Hero() {
         })}
       </div>
 
-      {/* Stats bar — flow on mobile, absolute on md+ */}
-      <div className="relative md:absolute md:bottom-0 inset-x-0 border-t border-line section-pad-x py-6 md:py-8 z-2 mt-10 md:mt-0">
-        <div
-          className="grid max-w-[560px]"
-          style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-            columnGap: "clamp(20px,5vw,80px)",
-            rowGap: "20px",
-          }}
-        >
-          {HERO.stats.map((s, i) => (
-            <div
-              key={s.l}
-              className="transition-all duration-700"
-              style={{
-                opacity: loaded ? 1 : 0,
-                transform: loaded ? "translateY(0)" : "translateY(14px)",
-                transitionDelay: loaded ? `${1000 + i * 150}ms` : "0ms",
-              }}
-            >
-              <div
-                ref={(el) => {
-                  statValueRefs.current[i] = el;
-                }}
-                className="font-display font-bold text-text leading-none mb-1"
-                style={{ fontSize: "clamp(26px,3.5vw,38px)" }}
-              >
-                {s.v}
-              </div>
-              <div
-                className="font-sans text-dim uppercase tracking-wide"
-                style={{ fontSize: 11 }}
-              >
-                {s.l}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
