@@ -205,30 +205,48 @@ export function ProcessTabs() {
 
   return (
     <div ref={sectionRef}>
-      {/* Header */}
+      {/* Header — matches existing section header scale */}
       <div
         ref={headerRef}
-        className="mb-16 min-[900px]:mb-20"
-        style={{ padding: "clamp(60px,8vw,100px) 0 0" }}
+        className="flex flex-wrap justify-between items-end gap-8 mb-10 min-[900px]:mb-14"
+        style={{ paddingTop: "clamp(64px,10vw,120px)" }}
       >
-        <div className="flex items-center gap-3 mb-10" data-reveal>
-          <div className="h-px bg-accent w-8" aria-hidden />
-          <span className="font-sans text-[11px] tracking-[0.15em] uppercase text-muted">
-            / 02 — Proces
-          </span>
+        <div className="max-w-[640px]">
+          <div className="flex items-center gap-4 mb-4" data-reveal>
+            <div className="h-[2px] bg-accent w-9" aria-hidden />
+            <span className="font-sans text-[11px] text-dim uppercase tracking-[.1em]">
+              Proces
+            </span>
+          </div>
+          <p
+            className="font-display font-bold text-muted leading-[1.15] mb-3"
+            style={{
+              fontSize: "clamp(18px,2.4vw,26px)",
+              letterSpacing: "-.02em",
+            }}
+            data-reveal
+          >
+            {PROCES_KICKER_LINES[0]}
+            <br />
+            {PROCES_KICKER_LINES[1]}
+          </p>
+          <h2
+            id="proc-heading"
+            className="font-display font-extrabold text-text leading-[1.05]"
+            style={{
+              fontSize: "clamp(26px,4vw,42px)",
+              letterSpacing: "-.03em",
+            }}
+            data-reveal
+          >
+            {PROCES_TITLE_LINES[0]}
+            <br />
+            {PROCES_TITLE_LINES[1]}
+          </h2>
         </div>
-        <h2
-          className="font-display font-normal leading-[0.95] tracking-[-0.02em] text-text mb-8"
-          style={{ fontSize: "clamp(56px, 9vw, 128px)" }}
-          data-reveal
-        >
-          {PROCES_KICKER_LINES[0]}
-          <br />
-          <span className="italic text-accent">{PROCES_KICKER_LINES[1]}</span>
-        </h2>
         <p
-          className="font-display italic text-muted max-w-[640px] leading-[1.4]"
-          style={{ fontSize: "clamp(20px, 2vw, 28px)" }}
+          className="font-sans font-light text-muted leading-relaxed max-w-[360px]"
+          style={{ fontSize: "clamp(13px,1.3vw,15px)" }}
           data-reveal
         >
           {PROCES_INTRO}
