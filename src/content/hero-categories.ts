@@ -2,7 +2,6 @@ export type HeroCategoryName =
   | "Medycyna"
   | "Edukacja"
   | "Gastronomia"
-  | "Retail"
   | "Biura";
 
 export type HeroCategory = {
@@ -30,12 +29,6 @@ export const HERO_CATEGORIES: readonly HeroCategory[] = [
     slug: "gastronomia",
     image: "/hero/gastronomia.jpg",
     grad: "linear-gradient(135deg,#1A1614 0%,#241A14 45%,#16100C 100%)",
-  },
-  {
-    name: "Retail",
-    slug: "retail",
-    image: null,
-    grad: "linear-gradient(135deg,#16141A 0%,#1C1822 45%,#100E14 100%)",
   },
   {
     name: "Biura",
