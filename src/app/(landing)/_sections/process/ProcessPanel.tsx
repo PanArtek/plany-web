@@ -66,39 +66,10 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
         {/* 4. Body */}
         <p
           data-panel-content
-          className="font-sans text-sm min-[900px]:text-base leading-[1.7] text-muted font-light mb-6 min-[900px]:mb-10"
+          className="font-sans text-sm min-[900px]:text-base leading-[1.7] text-muted font-light"
         >
           {step.body}
         </p>
-
-        {/* 5. Proof points */}
-        <ul data-panel-content className="list-none mb-8 min-[900px]:mb-12">
-          {step.proof.map((point) => (
-            <li
-              key={point}
-              className="flex items-start gap-3 py-2.5 min-[900px]:py-3 border-t border-line/50 font-sans text-[11px] min-[900px]:text-xs tracking-[0.05em] text-text/85 last:border-b last:border-line/50"
-            >
-              <span className="text-accent font-display italic shrink-0">
-                →
-              </span>
-              {point}
-            </li>
-          ))}
-        </ul>
-
-        {/* 6. Case link */}
-        <a
-          data-panel-content
-          href={step.caseLink}
-          className="inline-flex items-center gap-2 font-sans text-[10px] min-[900px]:text-[11px] tracking-[0.2em] uppercase text-muted pb-1 border-b border-line transition-colors hover:text-accent hover:border-accent"
-        >
-          <span>
-            {step.caseLabel
-              ? `Zobacz ten etap — ${step.caseLabel}`
-              : "Porozmawiajmy o serwisie"}
-          </span>
-          <span>↗</span>
-        </a>
       </div>
     </div>
   );
