@@ -29,21 +29,16 @@ export function ProcessPanel({ step, index, isActive }: ProcessPanelProps) {
           ? "relative"
           : "absolute inset-0 opacity-0 pointer-events-none",
       )}
-      style={step.embed ? { "--iframe-scale": "min(calc(100vw / 800), 1)" } as React.CSSProperties : undefined}
     >
       {step.embed ? (
-        /* Embedded HTML (e.g. animated kosztorys) — scaled iframe */
-        <div data-media className="absolute inset-0 overflow-hidden">
-          <iframe
-            src={step.embed}
-            title={`${step.label} — etap ${step.num}`}
-            className="border-0 origin-top-left w-[800px] h-[1000px] min-[900px]:w-full min-[900px]:h-full"
-            style={{
-              transform: "scale(var(--iframe-scale))",
-            }}
-            loading="lazy"
-          />
-        </div>
+        /* Embedded HTML — fills entire panel */
+        <iframe
+          data-media
+          src={step.embed}
+          title={`${step.label} — etap ${step.num}`}
+          className="absolute inset-0 w-full h-full border-0"
+          loading="lazy"
+        />
       ) : (
         <>
           {/* Background image or placeholder */}

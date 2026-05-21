@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Etap 02 — kosztorys</title>
 <style>
   :root {
@@ -14,7 +15,6 @@
     --dim: #5E564A;
     --accent: #C4A97D;
     --accent-bg: rgba(196,169,125,.1);
-    --heading: #E2D9CE;
     --val: #C4A97D;
     --total: #C4A97D;
     --total-bg: rgba(196,169,125,.1);
@@ -22,176 +22,172 @@
     --line: #2A2622;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; min-height: 100vh; background: var(--bg); }
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 300;
-    padding: 12px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    display: flex; flex-direction: column;
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Tabs bar — top */
   .tabs {
-    display: flex; gap: 4px;
-    background: var(--bg-alt); border: 1px solid var(--line); padding: 4px;
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
   }
   .tab {
-    padding: 6px 12px; border: none; background: transparent;
-    cursor: pointer; font: 500 10px/1 'Plus Jakarta Sans', system-ui, sans-serif;
-    color: var(--muted); letter-spacing: .03em;
-    transition: all .15s; white-space: nowrap;
+    flex: 1;
+    padding: 10px 8px; border: none; background: transparent;
+    cursor: pointer; font: 500 9px/1 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: var(--muted); letter-spacing: .05em; text-transform: uppercase;
+    transition: all .15s; text-align: center;
   }
   .tab.active { background: var(--accent); color: var(--bg); }
-  .tab:hover:not(.active) { background: var(--bg); color: var(--ink); }
+  .tab:hover:not(.active) { background: var(--bg-alt); color: var(--ink); }
 
-  .controls {
-    display: flex; gap: 8px; align-items: center;
-  }
-  .btn {
-    padding: 5px 10px; border: 1px solid var(--line);
-    background: var(--bg-alt); color: var(--muted);
-    font: 500 10px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer;
-    transition: all .15s; letter-spacing: .03em;
-  }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-  .btn.primary:hover { background: #D4BA8E; color: var(--bg); }
-
+  /* Document frame — fills remaining space */
   .frame {
-    width: 100%;
-    max-width: 720px;
     flex: 1;
     background: var(--paper);
-    border: 1px solid var(--line);
-    padding: 16px 18px;
+    padding: 12px;
     overflow: hidden;
     display: flex; flex-direction: column;
-    position: relative;
   }
 
   .doc-header {
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 12px;
-    margin-bottom: 14px;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
     display: flex; justify-content: space-between; align-items: flex-start;
+    flex-shrink: 0;
   }
   .doc-header h1 {
     font-family: 'Newsreader', Georgia, serif;
-    font-size: 14px; color: var(--ink); font-weight: 700;
-    letter-spacing: -.3px;
+    font-size: 12px; color: var(--ink); font-weight: 700;
+    letter-spacing: -.2px;
   }
   .doc-header .company {
-    font-size: 9px; color: var(--muted); margin-top: 2px; line-height: 1.4;
+    font-size: 7px; color: var(--muted); margin-top: 2px; line-height: 1.4;
   }
   .doc-header .meta {
-    font-size: 8px; color: var(--muted); text-align: right; line-height: 1.5;
+    font-size: 7px; color: var(--muted); text-align: right; line-height: 1.5;
+    flex-shrink: 0;
   }
   .doc-header .meta strong { color: var(--ink); }
 
   .offer-title {
-    font-size: 9px; color: var(--ink); margin-bottom: 8px;
+    font-size: 8px; color: var(--ink); margin-bottom: 6px;
     font-style: italic; padding: 4px 8px;
     background: var(--bg-alt); border-left: 2px solid var(--accent);
+    flex-shrink: 0;
   }
 
   .table-wrap {
     flex: 1; overflow: hidden;
     display: flex; flex-direction: column;
-    font-size: 8px; line-height: 1.4;
+    font-size: 7.5px; line-height: 1.4;
   }
 
   /* === PODSUMOWANIE === */
   .sum-colhead {
     display: grid;
-    grid-template-columns: 30px 1fr 80px;
-    gap: 6px;
-    background: rgba(196,169,125,.08);
+    grid-template-columns: 24px 1fr 64px;
+    gap: 4px;
+    background: var(--accent-bg);
     color: var(--accent); font-weight: 600;
-    padding: 5px 8px;
-    font-size: 8px;
+    padding: 4px 6px;
+    font-size: 7px;
     letter-spacing: .03em;
+    flex-shrink: 0;
   }
   .sum-row {
     display: grid;
-    grid-template-columns: 30px 1fr 80px;
-    gap: 10px;
-    padding: 6px 10px;
+    grid-template-columns: 24px 1fr 64px;
+    gap: 4px;
+    padding: 4px 6px;
     border-bottom: 1px solid var(--grid);
     color: var(--ink);
     opacity: 0;
     animation: fadeRow .25s ease-out forwards;
   }
   .sum-row:nth-child(even) { background: rgba(255,255,255,.02); }
-  .sum-row .id { color: var(--dim); font-weight: 600; font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
-  .sum-row .val { text-align: right; font-weight: 700; color: var(--val); font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
+  .sum-row .id { color: var(--dim); font-weight: 600; font-variant-numeric: tabular-nums; font-family: ui-monospace, monospace; }
+  .sum-row .val { text-align: right; font-weight: 700; color: var(--val); font-variant-numeric: tabular-nums; font-family: ui-monospace, monospace; }
   .sum-row .val.zero { color: var(--dim); font-weight: 500; }
 
-  /* === SZCZEGÓŁOWY (tylko ilość + j.m.) === */
+  /* === SZCZEGÓŁOWY === */
   .det-colhead {
     display: grid;
-    grid-template-columns: 1fr 80px 60px;
-    gap: 10px;
-    background: rgba(196,169,125,.08);
+    grid-template-columns: 1fr 50px 36px;
+    gap: 4px;
+    background: var(--accent-bg);
     color: var(--accent); font-weight: 600;
-    padding: 7px 10px;
-    font-size: 9.5px;
+    padding: 4px 6px;
+    font-size: 7px;
     letter-spacing: .03em;
+    flex-shrink: 0;
   }
   .det-colhead .num { text-align: right; }
   .det-colhead .unit { text-align: center; }
   .det-row {
     display: grid;
-    grid-template-columns: 1fr 80px 60px;
-    gap: 10px;
-    padding: 5px 10px;
+    grid-template-columns: 1fr 50px 36px;
+    gap: 4px;
+    padding: 3px 6px;
     border-bottom: 1px solid var(--grid);
     color: var(--ink);
     opacity: 0;
     animation: fadeRow .2s ease-out forwards;
-    font-size: 9.5px;
+    font-size: 7px;
   }
   .det-row:nth-child(even) { background: rgba(255,255,255,.02); }
-  .det-row .desc { line-height: 1.35; }
-  .det-row .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--val); font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace; }
+  .det-row .desc { line-height: 1.3; }
+  .det-row .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--val); font-family: ui-monospace, monospace; }
   .det-row .unit { text-align: center; color: var(--muted); font-weight: 600; }
   .det-row.section {
     background: var(--accent-bg);
     color: var(--accent);
     font-weight: 600;
-    border-left: 3px solid var(--accent);
-    margin-top: 4px;
-    padding: 6px 10px 6px 12px;
-    font-size: 10px;
-    letter-spacing: .4px;
+    border-left: 2px solid var(--accent);
+    margin-top: 2px;
+    padding: 4px 6px 4px 8px;
+    font-size: 7.5px;
+    letter-spacing: .3px;
   }
   .det-row.section > *:not(.desc) { display: none; }
   .det-row.section .desc { grid-column: 1 / -1; }
 
   .rows-area {
-    flex: 1; overflow-y: auto; margin-top: 4px;
+    flex: 1; overflow-y: auto; margin-top: 2px;
     scrollbar-width: thin; scrollbar-color: var(--dim) transparent;
   }
-  .rows-area::-webkit-scrollbar { width: 4px; }
+  .rows-area::-webkit-scrollbar { width: 3px; }
   .rows-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
 
   /* === TOTAL === */
   .total {
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
     display: flex; justify-content: space-between; align-items: center;
-    border-top: 2px solid var(--ink);
+    border-top: 1.5px solid var(--ink);
+    flex-shrink: 0;
   }
   .total .label {
-    font-size: 10px; color: var(--ink); font-weight: 600;
-    letter-spacing: .5px;
+    font-size: 8px; color: var(--ink); font-weight: 600;
+    letter-spacing: .3px;
   }
   .total .amount {
-    font-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
-    font-size: 16px; font-weight: 800;
+    font-family: ui-monospace, monospace;
+    font-size: 14px; font-weight: 800;
     color: var(--total);
     background: var(--total-bg);
-    padding: 6px 14px;
-    border: 1.5px solid var(--total);
+    padding: 4px 10px;
+    border: 1px solid var(--total);
     font-variant-numeric: tabular-nums;
     opacity: 0;
     transition: opacity .4s;
@@ -199,38 +195,26 @@
   .total .amount.visible { opacity: 1; }
 
   @keyframes fadeRow {
-    from { opacity: 0; transform: translateY(-4px); }
+    from { opacity: 0; transform: translateY(-3px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-
-  .hint {
-    color: var(--dim); font-size: 11px;
-    text-align: center;
   }
 </style>
 </head>
 <body>
 
-<div class="controls">
-  <div class="tabs">
-    <button class="tab active" data-view="summary">📊 PODSUMOWANIE</button>
-    <button class="tab" data-view="detailed">📋 SZCZEGÓŁOWY</button>
-  </div>
-  <button class="btn primary" id="replay">▶ Odtwórz</button>
+<div class="tabs">
+  <button class="tab active" data-view="summary">PODSUMOWANIE</button>
+  <button class="tab" data-view="detailed">ZAKRES PRAC</button>
 </div>
 
 <div class="frame">
   <div class="doc-header">
     <div>
       <h1>KOSZTORYS <span id="docType">— PODSUMOWANIE</span></h1>
-      <div class="company">PLANY Sp. z o.o. • ul. Długa 29, 00-238 Warszawa</div>
+      <div class="company">PLANY Sp. z o.o. • ul. Długa 29, Warszawa</div>
     </div>
     <div class="meta">
       <strong>DATA:</strong> 2026-05-18<br>
-      <strong>REWIZJA:</strong> 0.0<br>
       <strong>NR:</strong> MG/2026/05
     </div>
   </div>
@@ -242,12 +226,10 @@
   <div class="table-wrap" id="table"></div>
 
   <div class="total">
-    <span class="label">WARTOŚĆ OFERTY (netto)</span>
+    <span class="label">WARTOŚĆ NETTO</span>
     <span class="amount" id="amount">0,00 zł</span>
   </div>
 </div>
-
-<div class="hint">Kliknij zakładkę aby przełączyć widok</div>
 
 <script>
 const summary = [
@@ -274,104 +256,104 @@ const summary = [
 
 const detailed = [
   ['PRACE PRZYGOTOWAWCZE', 'section'],
-  ['Zabezpieczenie powierzchni — folia ochronna', '484,23', 'm²', 16.70, '8 088,58'],
-  ['Zabezpieczenie windy — płyta OSB, styropian', '1', 'kpl.', 2537.50, '2 537,50'],
-  ['Kontener na odpady BDO 7m³', '63', 'm²', 142.86, '9 000,34'],
+  ['Zabezpieczenie powierzchni — folia ochronna', '484,23', 'm²'],
+  ['Zabezpieczenie windy — płyta OSB, styropian', '1', 'kpl.'],
+  ['Kontener na odpady BDO 7m³', '63', 'm²'],
 
   ['DEMONTAŻE', 'section'],
-  ['Demontaż okładzin ściennych karton-gips', '42,36', 'm²', 42.53, '1 801,36'],
-  ['Demontaż sufitów podwieszanych mineralnych', '466,33', 'm²', 19.32, '9 008,80'],
-  ['Demontaż stolarki drzwiowej', '6', 'kpl.', 135.58, '813,48'],
-  ['Demontaż wykładziny dywanowej', '466,33', 'm²', 10.80, '5 036,36'],
-  ['Demontaż płytki ceramicznej (ściana)', '26,40', 'm²', 33.75, '891,00'],
-  ['Demontaż gresu (podłoga)', '8', 'm²', 56.70, '453,60'],
-  ['Demontaż armatury sanitarnej', '1', 'kpl.', 540, '540,00'],
+  ['Demontaż okładzin ściennych karton-gips', '42,36', 'm²'],
+  ['Demontaż sufitów podwieszanych mineralnych', '466,33', 'm²'],
+  ['Demontaż stolarki drzwiowej', '6', 'kpl.'],
+  ['Demontaż wykładziny dywanowej', '466,33', 'm²'],
+  ['Demontaż płytki ceramicznej (ściana)', '26,40', 'm²'],
+  ['Demontaż gresu (podłoga)', '8', 'm²'],
+  ['Demontaż armatury sanitarnej', '1', 'kpl.'],
 
   ['ŚCIANY DZIAŁOWE', 'section'],
-  ['Ściana Nida 125A75/EXPERT EI60 Rw58', '162,68', 'm²', 320.15, '52 082,16'],
-  ['Przedścianka C75-25 NIDA TYNK WODA', '11,60', 'm²', 270.16, '3 133,88'],
-  ['Otwory drzwiowe — Profil UA100', '56', 'mb.', 77.71, '4 351,54'],
-  ['Wzmocnienie RIGIPS PRO HABITO DFRI', '4', 'kpl.', 378, '1 512,00'],
-  ['Ściana mobilna akustyczna Optimal 110', '13,77', 'm²', 2152.51, '29 640,09'],
-  ['Obudowa toru jezdnego ściany mobilnej', '10,20', 'mb.', 326.55, '3 330,83'],
+  ['Ściana Nida 125A75/EXPERT EI60 Rw58', '162,68', 'm²'],
+  ['Przedścianka C75-25 NIDA TYNK WODA', '11,60', 'm²'],
+  ['Otwory drzwiowe — Profil UA100', '56', 'mb.'],
+  ['Wzmocnienie RIGIPS PRO HABITO DFRI', '4', 'kpl.'],
+  ['Ściana mobilna akustyczna Optimal 110', '13,77', 'm²'],
+  ['Obudowa toru jezdnego ściany mobilnej', '10,20', 'mb.'],
 
   ['WYKOŃCZENIE ŚCIAN', 'section'],
-  ['Malowanie Tikkurila Optiva (nowoprojektowane)', '325,36', 'm²', 33.75, '10 980,90'],
-  ['Malowanie ścian istniejących + opaska', '732,69', 'm²', 33.75, '24 728,29'],
-  ['Szpachlowanie pęknięć (założono 20%)', '146,54', 'm²', 44.83, '6 569,81'],
+  ['Malowanie Tikkurila Optiva (nowoprojektowane)', '325,36', 'm²'],
+  ['Malowanie ścian istniejących + opaska', '732,69', 'm²'],
+  ['Szpachlowanie pęknięć (założono 20%)', '146,54', 'm²'],
 
   ['POSADZKI', 'section'],
-  ['Wykładzina dywanowa', '466,33', 'm²', 136.80, '63 793,94'],
-  ['Listwa przypodłogowa PVC', '374,20', 'mb.', 18.90, '7 072,38'],
+  ['Wykładzina dywanowa', '466,33', 'm²'],
+  ['Listwa przypodłogowa PVC', '374,20', 'mb.'],
 
   ['SUFITY PODWIESZANE', 'section'],
-  ['Konstrukcja T15 — sufit modułowy', '466,33', 'm²', 65, '30 311,45'],
-  ['Kaseton nowy', '139,90', 'm²', 78, '10 912,12'],
-  ['Montaż kasetonów z demontażu', '326,43', 'm²', 15.60, '5 092,32'],
+  ['Konstrukcja T15 — sufit modułowy', '466,33', 'm²'],
+  ['Kaseton nowy', '139,90', 'm²'],
+  ['Montaż kasetonów z demontażu', '326,43', 'm²'],
 
   ['STOLARKA ALU-SZKLANA', 'section'],
-  ['Drzwi ACS 50 (B=900, H=2050)', '8', 'kpl.', 5405, '43 240,00'],
+  ['Drzwi ACS 50 (B=900, H=2050)', '8', 'kpl.'],
 
   ['ELEKTRYKA — DEMONTAŻE', 'section'],
-  ['Demontaż opraw oświetleniowych', '104', 'kpl.', 19.50, '2 028,00'],
-  ['Demontaż okablowania LAN', '1', 'kpl.', 1560, '1 560,00'],
-  ['Dostosowanie instalacji elektrycznej', '1', 'kpl.', 3120, '3 120,00'],
+  ['Demontaż opraw oświetleniowych', '104', 'kpl.'],
+  ['Demontaż okablowania LAN', '1', 'kpl.'],
+  ['Dostosowanie instalacji elektrycznej', '1', 'kpl.'],
 
   ['ELEKTRYKA — TRASY KABLOWE', 'section'],
-  ['Rura elektroinstalacyjna nastropowa', '91,63', 'mb.', 11.78, '1 079,16'],
-  ['Prowadzenie kabli w ścianach G/K', '297', 'mb.', 7.79, '2 312,74'],
-  ['Prowadzenie kabli podłoga techniczna', '372', 'mb.', 8.88, '3 302,99'],
+  ['Rura elektroinstalacyjna nastropowa', '91,63', 'mb.'],
+  ['Prowadzenie kabli w ścianach G/K', '297', 'mb.'],
+  ['Prowadzenie kabli podłoga techniczna', '372', 'mb.'],
 
   ['OŚWIETLENIE OGÓLNE', 'section'],
-  ['Panel LED BLINGO IP65 40W podtynkowy', '134', 'szt.', 195, '26 130,00'],
-  ['Downlight bez zasilacza', '7', 'szt.', 497.89, '3 485,21'],
-  ['Oprawa awaryjna OWA FL 00 (typ 1)', '6', 'szt.', 490.17, '2 940,99'],
-  ['Oprawa awaryjna OWA FL 00 (typ 2)', '7', 'szt.', 490.17, '3 431,16'],
-  ['Oprawa ewakuacyjna PRIMOS III SGN', '7', 'szt.', 334.82, '2 343,71'],
-  ['Oprawa ewakuacyjna CRYSTAL II SGN', '4', 'szt.', 371.48, '1 485,90'],
-  ['Łączniki jednobiegunowe', '2', 'szt.', 55.19, '110,37'],
-  ['Łączniki świecznikowe', '14', 'szt.', 64.64, '904,90'],
-  ['Przyciski zwierne', '9', 'szt.', 61.91, '557,15'],
-  ['Czujki ruchu', '6', 'szt.', 85.80, '514,80'],
-  ['Kable wielożyłowe typ 1', '423', 'mb.', 9.75, '4 124,25'],
-  ['Kable wielożyłowe typ 2', '310', 'mb.', 11.31, '3 506,10'],
+  ['Panel LED BLINGO IP65 40W podtynkowy', '134', 'szt.'],
+  ['Downlight bez zasilacza', '7', 'szt.'],
+  ['Oprawa awaryjna OWA FL 00 (typ 1)', '6', 'szt.'],
+  ['Oprawa awaryjna OWA FL 00 (typ 2)', '7', 'szt.'],
+  ['Oprawa ewakuacyjna PRIMOS III SGN', '7', 'szt.'],
+  ['Oprawa ewakuacyjna CRYSTAL II SGN', '4', 'szt.'],
+  ['Łączniki jednobiegunowe', '2', 'szt.'],
+  ['Łączniki świecznikowe', '14', 'szt.'],
+  ['Przyciski zwierne', '9', 'szt.'],
+  ['Czujki ruchu', '6', 'szt.'],
+  ['Kable wielożyłowe typ 1', '423', 'mb.'],
+  ['Kable wielożyłowe typ 2', '310', 'mb.'],
 
   ['INSTALACJA SIŁOWA', 'section'],
-  ['Wypust instalacji siłowej (kabel bezhalogenowy)', '820', 'mb.', 11.71, '9 604,66'],
-  ['Gniazdo wtykowe natynkowe', '14', 'szt.', 53.77, '752,75'],
-  ['Gniazdo wtykowe IP44', '12', 'szt.', 73.13, '877,50'],
-  ['Relokacja puszek podłogowych', '53', 'szt.', 100.10, '5 305,30'],
-  ['Gniazdo zasilające kątowe (puszki podłogowe)', '119', 'szt.', 44.07, '5 244,33'],
-  ['Gniazdo DATA (puszki podłogowe)', '66', 'szt.', 45.63, '3 011,58'],
-  ['Modernizacja układu licznikowania', '1', 'szt.', 1973.37, '1 973,37'],
-  ['Modernizacja rozdzielni', '1', 'szt.', 1820, '1 820,00'],
-  ['Zabezpieczenie ppoż. przejść kablowych', '2', 'szt.', 452.40, '904,80'],
+  ['Wypust instalacji siłowej (kabel bezhalogenowy)', '820', 'mb.'],
+  ['Gniazdo wtykowe natynkowe', '14', 'szt.'],
+  ['Gniazdo wtykowe IP44', '12', 'szt.'],
+  ['Relokacja puszek podłogowych', '53', 'szt.'],
+  ['Gniazdo zasilające kątowe (puszki podłogowe)', '119', 'szt.'],
+  ['Gniazdo DATA (puszki podłogowe)', '66', 'szt.'],
+  ['Modernizacja układu licznikowania', '1', 'szt.'],
+  ['Modernizacja rozdzielni', '1', 'szt.'],
+  ['Zabezpieczenie ppoż. przejść kablowych', '2', 'szt.'],
 
   ['NISKOPRĄDOWE — LAN', 'section'],
-  ['Szafa RACK', '1', 'szt.', 3146.27, '3 146,27'],
-  ['Okablowanie F/FTP kat.6A LSZH', '5940', 'mb.', 9.38, '55 740,96'],
-  ['Okablowanie WiFi F/UTP kat.6', '105', 'mb.', 9.07, '952,56'],
-  ['Keystone RJ45 w panelu', '138', 'szt.', 32.43, '4 474,93'],
-  ['Keystone RJ45 w gniazdach abonenckich', '138', 'szt.', 40.05, '5 527,31'],
+  ['Szafa RACK', '1', 'szt.'],
+  ['Okablowanie F/FTP kat.6A LSZH', '5940', 'mb.'],
+  ['Okablowanie WiFi F/UTP kat.6', '105', 'mb.'],
+  ['Keystone RJ45 w panelu', '138', 'szt.'],
+  ['Keystone RJ45 w gniazdach abonenckich', '138', 'szt.'],
 
   ['NISKOPRĄDOWE — KD / CCTV', 'section'],
-  ['Relokacja czytników KD', '1', 'kpl.', 364, '364,00'],
-  ['Okablowanie CCTV F/UTP kat.6 LSZH', '90', 'mb.', 8.41, '756,99'],
+  ['Relokacja czytników KD', '1', 'kpl.'],
+  ['Okablowanie CCTV F/UTP kat.6 LSZH', '90', 'mb.'],
 
   ['SANITARNE', 'section'],
-  ['Dostosowanie instalacji wod-kan', '1', 'kpl.', 4600, '4 600,00'],
-  ['Modernizacja wentylacji mechanicznej', '1', 'kpl.', 16100, '16 100,00'],
+  ['Dostosowanie instalacji wod-kan', '1', 'kpl.'],
+  ['Modernizacja wentylacji mechanicznej', '1', 'kpl.'],
 
   ['HVAC', 'section'],
-  ['Klimatyzator split — serwerownia', '1', 'kpl.', 13440, '13 440,00'],
+  ['Klimatyzator split — serwerownia', '1', 'kpl.'],
 
   ['DOKUMENTACJA POWYKONAWCZA', 'section'],
-  ['Dokumentacja architektura (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
-  ['Dokumentacja elektryka (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
-  ['Dokumentacja sanitarna (kierownik robót)', '1', 'kpl.', 2400, '2 400,00'],
-  ['Pomiar natężenia oświetlenia', '437', 'pkt.', 2.60, '1 136,20'],
-  ['Pomiar parametrów instalacji elektrycznej', '46', 'pkt.', 32.50, '1 495,00'],
-  ['Pomiar okablowania strukturalnego FLUKE', '68', 'pkt.', 32.50, '2 210,00'],
+  ['Dokumentacja architektura (kierownik robót)', '1', 'kpl.'],
+  ['Dokumentacja elektryka (kierownik robót)', '1', 'kpl.'],
+  ['Dokumentacja sanitarna (kierownik robót)', '1', 'kpl.'],
+  ['Pomiar natężenia oświetlenia', '437', 'pkt.'],
+  ['Pomiar parametrów instalacji elektrycznej', '46', 'pkt.'],
+  ['Pomiar okablowania strukturalnego FLUKE', '68', 'pkt.'],
 ];
 
 const TOTAL = 544498.67;
@@ -395,11 +377,7 @@ function render(view) {
   amountEl.classList.remove('visible');
   amountEl.textContent = '0,00 zł';
 
-  if (view === 'detailed') {
-    totalEl.style.display = 'none';
-  } else {
-    totalEl.style.display = 'flex';
-  }
+  totalEl.style.display = view === 'detailed' ? 'none' : 'flex';
 
   const tableEl = document.getElementById('table');
   tableEl.innerHTML = '';
@@ -407,7 +385,7 @@ function render(view) {
   if (view === 'summary') {
     const head = document.createElement('div');
     head.className = 'sum-colhead';
-    head.innerHTML = '<span>Lp.</span><span>Dział</span><span style="text-align:right">Wartość [zł]</span>';
+    head.innerHTML = '<span>Lp.</span><span>Dział</span><span style="text-align:right">Wartość</span>';
     tableEl.appendChild(head);
 
     const area = document.createElement('div');
@@ -435,11 +413,7 @@ function render(view) {
   } else {
     const head = document.createElement('div');
     head.className = 'det-colhead';
-    head.innerHTML = `
-      <span>Opis pozycji</span>
-      <span class="num">Ilość</span>
-      <span class="unit">j.m.</span>
-    `;
+    head.innerHTML = '<span>Opis pozycji</span><span class="num">Ilość</span><span class="unit">j.m.</span>';
     tableEl.appendChild(head);
 
     const area = document.createElement('div');
@@ -488,8 +462,6 @@ document.querySelectorAll('.tab').forEach(btn => {
     render(btn.dataset.view);
   });
 });
-
-document.getElementById('replay').addEventListener('click', () => render(currentView));
 
 render('summary');
 </script>
