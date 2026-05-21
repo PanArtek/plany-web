@@ -2,7 +2,7 @@ import { Nav } from "./(landing)/_sections/nav";
 import { Hero } from "./(landing)/_sections/hero";
 import { Specjalizacje } from "./(landing)/_sections/specjalizacje";
 import { Realizacje } from "./(landing)/_sections/realizacje";
-import { Proces } from "./(landing)/_sections/proces";
+import { Process } from "./(landing)/_sections/process";
 import { Stats } from "./(landing)/_sections/stats";
 import { Kontakt } from "./(landing)/_sections/kontakt";
 import { Footer } from "./(landing)/_sections/footer";
@@ -46,7 +46,7 @@ export default function Home() {
       <Nav />
       <main className="pb-20 md:pb-0">
         <Hero />
-        <Proces />
+        <Process />
         <Specjalizacje />
         <Realizacje />
         <Stats />

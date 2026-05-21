@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLANY — Proces v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D0B09;
+    --bg-2: #15120F;
+    --bg-3: #1F1B16;
+    --cream: #F5F1EA;
+    --cream-2: #E8E2D5;
+    --accent: #D4734A;
+    --accent-hover: #E08A5F;
+    --accent-dim: rgba(212, 115, 74, 0.12);
+    --text: #F5F1EA;
+    --text-mute: #8A8578;
+    --text-faint: #4A453E;
+    --border: #2A2520;
+    --border-faint: #1A1612;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Geist', -apple-system, system-ui, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, monospace;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* ============ MODE SWITCHER ============ */
+  .mode-switch {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13, 11, 9, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .mode-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+  .mode-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-2);
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .mode-toggle button {
+    background: none;
+    border: none;
+    color: var(--text-mute);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .mode-toggle button.active {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .mode-toggle button:not(.active):hover { color: var(--cream); }
+
+  /* ============ HEADER ============ */
+  .section-head {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 32px 80px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .display {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(56px, 9vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+  .display .italic { font-style: italic; color: var(--accent); }
+  .lead {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.4;
+    color: var(--text-mute);
+    max-width: 640px;
+    margin-top: 32px;
+    font-style: italic;
+  }
+
+  /* ============ HIDE MODES ============ */
+  .mode { display: none; }
+  .mode.active { display: block; }
+
+  /* ============================================================
+     MODE A — TABS (jeden etap naraz, klik na numer)
+     ============================================================ */
+  .tabs-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 160px;
+  }
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 80px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-faint);
+    padding: 32px 24px;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    transition: all 0.4s var(--ease);
+    overflow: hidden;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+  }
+  .tab-btn.active::after { transform: scaleX(1); }
+  .tab-btn.active { color: var(--cream); background: var(--bg-2); }
+  .tab-btn:hover:not(.active) { color: var(--text-mute); background: var(--bg-2); }
+  .tab-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 12px;
+    color: var(--accent);
+    display: block;
+  }
+  .tab-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .tab-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--cream);
+    opacity: 0.7;
+  }
+  .tab-btn.active .tab-title { opacity: 1; }
+
+  /* Tab panels — kreatywne wejście */
+  .tab-panel {
+    display: none;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: stretch;
+    min-height: 600px;
+  }
+  .tab-panel.active { display: grid; }
+
+  /* MEDIA SIDE - clip-path reveal */
+  .tab-media {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--bg-2);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    animation: mediaReveal 1s var(--ease) both;
+  }
+  @keyframes mediaReveal {
+    0% { clip-path: inset(0 100% 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+  .media-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background:
+      repeating-linear-gradient(45deg, transparent, transparent 12px,
+        rgba(212, 115, 74, 0.03) 12px, rgba(212, 115, 74, 0.03) 13px);
+  }
+  .slot-label {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 16px;
+  }
+  .slot-title {
+    font-family: var(--serif); font-size: 36px;
+    color: var(--text-mute); text-align: center;
+    margin-bottom: 16px; font-style: italic;
+  }
+  .slot-hint {
+    font-family: var(--sans); font-size: 13px;
+    color: var(--text-faint); text-align: center;
+    max-width: 280px; line-height: 1.5;
+  }
+  .slot-spec {
+    margin-top: 32px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  /* Counter overlay */
+  .counter {
+    position: absolute;
+    top: 24px; left: 24px;
+    z-index: 5;
+    display: flex; align-items: baseline; gap: 8px;
+    animation: counterPop 0.6s var(--ease) 0.4s both;
+  }
+  @keyframes counterPop {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .counter-num {
+    font-family: var(--serif); font-size: 96px; line-height: 1;
+    color: var(--accent); font-style: italic;
+  }
+  .counter-total {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--text-mute); letter-spacing: 0.1em;
+  }
+  .bracket {
+    position: absolute; width: 24px; height: 24px;
+    animation: bracketIn 0.6s var(--ease) 0.6s both;
+  }
+  @keyframes bracketIn {
+    0% { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .bracket.tr { top: 16px; right: 16px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+  .bracket.bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+
+  /* CONTENT SIDE — split + stagger */
+  .tab-content {
+    padding: 40px 0;
+    overflow: hidden;
+  }
+  .tab-panel.active .tab-content > * {
+    animation: contentRise 0.8s var(--ease) both;
+  }
+  .tab-panel.active .tab-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .tab-panel.active .tab-content > *:nth-child(2) { animation-delay: 0.2s; }
+  .tab-panel.active .tab-content > *:nth-child(3) { animation-delay: 0.3s; }
+  .tab-panel.active .tab-content > *:nth-child(4) { animation-delay: 0.4s; }
+  .tab-panel.active .tab-content > *:nth-child(5) { animation-delay: 0.5s; }
+  .tab-panel.active .tab-content > *:nth-child(6) { animation-delay: 0.6s; }
+  @keyframes contentRise {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .step-eyebrow {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
+  }
+  .step-eyebrow .num {
+    font-family: var(--serif); font-style: italic;
+    font-size: 56px; line-height: 1; color: var(--accent);
+  }
+  .step-eyebrow .label {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-mute);
+  }
+  .step-eyebrow .duration {
+    margin-left: auto; font-family: var(--mono);
+    font-size: 11px; color: var(--text-faint);
+    padding: 4px 10px; border: 1px solid var(--border);
+  }
+  .step-title {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(40px, 4vw, 64px); line-height: 1.05;
+    letter-spacing: -0.015em; color: var(--cream); margin-bottom: 32px;
+  }
+  .step-title em { font-style: italic; color: var(--accent); }
+  .step-deliverable {
+    font-family: var(--serif); font-size: 22px; line-height: 1.4;
+    color: var(--cream-2); font-style: italic;
+    padding-left: 20px; border-left: 1px solid var(--accent);
+    margin-bottom: 32px;
+  }
+  .step-body {
+    font-family: var(--sans); font-size: 16px; line-height: 1.7;
+    color: var(--text-mute); margin-bottom: 40px; font-weight: 300;
+  }
+  .step-proof { list-style: none; margin-bottom: 48px; }
+  .step-proof li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-top: 1px solid var(--border-faint);
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--cream-2);
+  }
+  .step-proof li:last-child { border-bottom: 1px solid var(--border-faint); }
+  .step-proof .arrow {
+    color: var(--accent); font-family: var(--serif);
+    font-style: italic; flex-shrink: 0;
+  }
+  .case-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-mute); text-decoration: none;
+    padding-bottom: 4px; border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .case-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ============================================================
+     MODE B — GRID (wszystkie naraz, kreatywne wejście przy scrollu)
+     ============================================================ */
+  .grid-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 160px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+    grid-auto-rows: min-content;
+  }
+  .card {
+    position: relative;
+    padding: 40px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(60px) rotate(var(--rot, 0deg)) scale(0.94);
+    filter: blur(8px);
+    transition:
+      opacity 0.9s var(--ease),
+      transform 1.1s var(--ease),
+      filter 0.8s var(--ease),
+      background 0.4s ease,
+      border-color 0.4s ease;
+    overflow: hidden;
+  }
+  .card.in {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+    filter: blur(0);
+  }
+  .card:hover {
+    background: var(--bg-3);
+    border-color: var(--accent);
+  }
+  .card:hover .card-num { color: var(--accent); }
+  /* Bento sizing - asymetria */
+  .card[data-step="0"] { grid-column: span 7; min-height: 420px; }
+  .card[data-step="1"] { grid-column: span 5; min-height: 420px; }
+  .card[data-step="2"] { grid-column: span 12; min-height: 360px;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+  .card[data-step="3"] { grid-column: span 5; min-height: 380px; }
+  .card[data-step="4"] { grid-column: span 7; min-height: 380px; }
+
+  /* Decorative big number */
+  .card-bignum {
+    position: absolute;
+    top: -20px; right: -10px;
+    font-family: var(--serif); font-style: italic;
+    font-size: 280px; line-height: 1;
+    color: var(--accent-dim);
+    pointer-events: none;
+    z-index: 0;
+    transition: all 0.6s var(--ease);
+  }
+  .card:hover .card-bignum {
+    color: rgba(212, 115, 74, 0.22);
+    transform: scale(1.05) rotate(-3deg);
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-num {
+    font-family: var(--serif); font-style: italic;
+    font-size: 24px; color: var(--text-mute);
+    margin-bottom: 16px; transition: color 0.3s;
+  }
+  .card-label {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 20px;
+  }
+  .card-title {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(28px, 3vw, 44px); line-height: 1.05;
+    color: var(--cream); margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+  .card-title em { font-style: italic; color: var(--accent); }
+  .card-deliv {
+    font-family: var(--serif); font-style: italic;
+    font-size: 17px; line-height: 1.5;
+    color: var(--cream-2);
+    padding-left: 16px; border-left: 1px solid var(--accent);
+    margin-bottom: 24px;
+  }
+  .card-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-faint);
+  }
+  .card-meta span {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-mute);
+  }
+  .card-meta .dot { color: var(--accent); }
+
+  /* Hero card (step 03) - special layout */
+  .card-hero-img {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 24px;
+    background:
+      repeating-linear-gradient(45deg, transparent, transparent 12px,
+        rgba(212, 115, 74, 0.03) 12px, rgba(212, 115, 74, 0.03) 13px);
+  }
+  .card-hero-img .slot-title { font-size: 24px; margin-bottom: 8px; }
+  .card-hero-img .slot-hint { font-size: 11px; }
+
+  /* ============ CTA ============ */
+  .cta { border-top: 1px solid var(--border); }
+  .cta-inner {
+    max-width: 1400px; margin: 0 auto;
+    padding: 160px 32px;
+    display: grid; grid-template-columns: 1.5fr 1fr;
+    gap: 80px; align-items: end;
+  }
+  .cta-display {
+    font-family: var(--serif);
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 1.0; letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+  .cta-display em { font-style: italic; color: var(--accent); }
+  .cta-buttons { display: flex; flex-direction: column; gap: 12px; }
+  .btn {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 32px; text-decoration: none;
+    font-family: var(--sans); font-weight: 400; transition: all 0.3s;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); font-size: 18px; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary {
+    background: transparent; color: var(--text-mute);
+    border: 1px solid var(--border); font-size: 14px;
+  }
+  .btn-secondary:hover { border-color: var(--cream); color: var(--cream); }
+  .btn .arrow {
+    font-family: var(--serif); font-style: italic;
+    font-size: 24px; transition: transform 0.3s;
+  }
+  .btn:hover .arrow { transform: translateX(6px); }
+
+  /* ============ NOTES ============ */
+  .notes {
+    background: var(--cream); color: var(--bg);
+    padding: 48px 32px; border-top: 4px solid var(--accent);
+  }
+  .notes-inner { max-width: 900px; margin: 0 auto; }
+  .notes-title {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 24px;
+  }
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .notes-grid p { font-size: 14px; line-height: 1.6; color: #2A2520; }
+  .notes-grid strong {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--bg); display: block; margin-bottom: 4px;
+  }
+  .notes-grid code {
+    background: rgba(212, 115, 74, 0.15);
+    padding: 1px 6px; font-family: var(--mono); font-size: 12px;
+  }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 900px) {
+    .tabs-nav { grid-template-columns: 1fr; }
+    .tab-btn { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; }
+    .tab-panel { grid-template-columns: 1fr; gap: 40px; min-height: 0; }
+    .tab-media { aspect-ratio: 4/5; }
+    .card[data-step] { grid-column: span 12 !important; }
+    .card[data-step="2"] { grid-template-columns: 1fr; }
+    .cta-inner { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+    .notes-grid { grid-template-columns: 1fr; }
+    .section-head { padding: 60px 24px 40px; }
+    .tabs-wrap, .grid-wrap { padding-left: 24px; padding-right: 24px; padding-bottom: 80px; }
+    .card-bignum { font-size: 180px; }
+  }
+
+  /* ============ REDUCED MOTION ============ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .card { opacity: 1; transform: none; filter: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ MODE SWITCHER ============ -->
+<div class="mode-switch">
+  <span class="mode-label">★ Tryb prezentacji</span>
+  <div class="mode-toggle">
+    <button class="active" data-mode="tabs">Tryb A — Zakładki (jeden naraz)</button>
+    <button data-mode="grid">Tryb B — Bento Grid (wszystkie)</button>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<section class="section-head">
+  <div class="eyebrow">/ 02 — Proces</div>
+  <h2 class="display">
+    Wielkie PLANY<br>
+    <span class="italic">zaczynają się tu.</span>
+  </h2>
+  <p class="lead">
+    Pięć kroków, jeden zespół, jedna odpowiedzialność —<br>
+    od wyceny po serwis pogwarancyjny.
+  </p>
+</section>
+
+<!-- ============================================================
+     MODE A — TABS
+     ============================================================ -->
+<section class="mode active" data-mode-content="tabs">
+  <div class="tabs-wrap">
+
+    <!-- Tab navigation -->
+    <nav class="tabs-nav" aria-label="Etapy procesu">
+      <button class="tab-btn active" data-tab="0">
+        <span class="tab-num">01</span>
+        <span class="tab-label">Konsultacja · 2–5 dni</span>
+        <span class="tab-title">Weryfikacja zakresu</span>
+      </button>
+      <button class="tab-btn" data-tab="1">
+        <span class="tab-num">02</span>
+        <span class="tab-label">Dokumentacja · 5–10 dni</span>
+        <span class="tab-title">Kosztorys i harmonogram</span>
+      </button>
+      <button class="tab-btn" data-tab="2">
+        <span class="tab-num">03</span>
+        <span class="tab-label">Budowa · 8–16 tyg.</span>
+        <span class="tab-title">Realizacja własnymi ekipami</span>
+      </button>
+      <button class="tab-btn" data-tab="3">
+        <span class="tab-num">04</span>
+        <span class="tab-label">Odbiór · 1–3 dni</span>
+        <span class="tab-title">Odbiór z dokumentacją</span>
+      </button>
+      <button class="tab-btn" data-tab="4">
+        <span class="tab-num">05</span>
+        <span class="tab-label">Serwis · ciągłość</span>
+        <span class="tab-title">Serwis gwarancyjny</span>
+      </button>
+    </nav>
+
+    <!-- Tab panels -->
+
+    <div class="tab-panel active" data-panel="0">
+      <div class="tab-media">
+        <div class="counter"><span class="counter-num">01</span><span class="counter-total">/ 05</span></div>
+        <span class="bracket tr"></span><span class="bracket bl"></span>
+        <div class="media-placeholder">
+          <div class="slot-label">Etap 01 · Konsultacja</div>
+          <div class="slot-title">Weryfikacja zakresu</div>
+          <div class="slot-hint">Tu wstaw zdjęcie: spotkanie z klientem na miejscu, notatnik, taśma miernicza, ekipa robiąca pomiary</div>
+          <div class="slot-spec">4:5 · 1600px · WebP</div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="step-eyebrow">
+          <span class="num">01</span>
+          <span class="label">Konsultacja</span>
+          <span class="duration">2–5 dni</span>
+        </div>
+        <h3 class="step-title">Weryfikacja zakresu <em>i kosztu</em></h3>
+        <p class="step-deliverable">Wizja lokalna, pomiary, kalkulacja. W 48h gotowa wycena rozbita pozycyjnie.</p>
+        <p class="step-body">Spotykamy się u Ciebie lub w lokalu. Mierzymy, fotografujemy, dopytujemy. Bez prezentacji w PowerPoincie — wychodzimy z notatnikiem pełnym konkretów i wracamy z liczbami.</p>
+        <ul class="step-proof">
+          <li><span class="arrow">→</span> Wizja lokalna w 48h od zgłoszenia</li>
+          <li><span class="arrow">→</span> Pierwsza wycena bezpłatna</li>
+        </ul>
+        <a href="#real" class="case-link"><span>Zobacz ten etap — LUXVET</span><span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="1">
+      <div class="tab-media">
+        <div class="counter"><span class="counter-num">02</span><span class="counter-total">/ 05</span></div>
+        <span class="bracket tr"></span><span class="bracket bl"></span>
+        <div class="media-placeholder">
+          <div class="slot-label">Etap 02 · Dokumentacja</div>
+          <div class="slot-title">Kosztorys</div>
+          <div class="slot-hint">Tu wstaw zdjęcie: kosztorys w Excelu na monitorze, rysunek techniczny, stół z dokumentacją</div>
+          <div class="slot-spec">4:5 · 1600px · WebP</div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="step-eyebrow">
+          <span class="num">02</span>
+          <span class="label">Dokumentacja</span>
+          <span class="duration">5–10 dni</span>
+        </div>
+        <h3 class="step-title">Zamknięty kosztorys <em>i harmonogram</em></h3>
+        <p class="step-deliverable">Wszystko ustalone, zanim ekipa wejdzie na budowę.</p>
+        <p class="step-body">Kosztorys pozycja po pozycji — widzisz każdą stawkę robocizny i każdą cenę materiału. Harmonogram z datami, jasny zakres prac, marża wpisana jawnie. Negocjujesz pozycję po pozycji albo akceptujesz w całości.</p>
+        <ul class="step-proof">
+          <li><span class="arrow">→</span> Kosztorys otwarty — pozycja po pozycji</li>
+          <li><span class="arrow">→</span> Stałe ceny, bez ryzyka kursowego</li>
+        </ul>
+        <a href="#real" class="case-link"><span>Zobacz ten etap — Star Dental</span><span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="2">
+      <div class="tab-media">
+        <div class="counter"><span class="counter-num">03</span><span class="counter-total">/ 05</span></div>
+        <span class="bracket tr"></span><span class="bracket bl"></span>
+        <div class="media-placeholder">
+          <div class="slot-label">Etap 03 · Budowa</div>
+          <div class="slot-title">Realizacja</div>
+          <div class="slot-hint">Tu wstaw zdjęcie: ekipa w kamizelkach na budowie, prace elektryczne, kierownik nadzorujący</div>
+          <div class="slot-spec">4:5 · 1600px · WebP</div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="step-eyebrow">
+          <span class="num">03</span>
+          <span class="label">Budowa</span>
+          <span class="duration">8–16 tyg.</span>
+        </div>
+        <h3 class="step-title">Realizacja <em>własnymi ekipami</em></h3>
+        <p class="step-deliverable">30 osób na stałe, 10 elektryków, zintegrowani podwykonawcy z którymi pracujemy od lat.</p>
+        <p class="step-body">Na budowie zawsze kierownik z naszej strony — jeden człowiek, jedna odpowiedzialność. Bez ekip z ulicy, bez tłumaczeń "ktoś nie przyjechał". Tygodniowe raporty fotograficzne i harmonogram online.</p>
+        <ul class="step-proof">
+          <li><span class="arrow">→</span> 10 elektryków in-house</li>
+          <li><span class="arrow">→</span> Stali podwykonawcy od 10+ lat</li>
+          <li><span class="arrow">→</span> Tygodniowy raport ze zdjęciami</li>
+        </ul>
+        <a href="#real" class="case-link"><span>Zobacz ten etap — Hala Koszyki</span><span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="3">
+      <div class="tab-media">
+        <div class="counter"><span class="counter-num">04</span><span class="counter-total">/ 05</span></div>
+        <span class="bracket tr"></span><span class="bracket bl"></span>
+        <div class="media-placeholder">
+          <div class="slot-label">Etap 04 · Odbiór</div>
+          <div class="slot-title">Przekazanie</div>
+          <div class="slot-hint">Tu wstaw zdjęcie: gotowe wnętrze przy odbiorze, podpisanie protokołu, klucze, dokumentacja</div>
+          <div class="slot-spec">4:5 · 1600px · WebP</div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="step-eyebrow">
+          <span class="num">04</span>
+          <span class="label">Odbiór</span>
+          <span class="duration">1–3 dni</span>
+        </div>
+        <h3 class="step-title">Odbiór <em>z dokumentacją</em></h3>
+        <p class="step-deliverable">Dokumentacja powykonawcza, protokoły odbiorów, gwarancja.</p>
+        <p class="step-body">Komplet papierów do każdego urzędu, który będzie sprawdzał — Sanepid, straż pożarna, nadzór budowlany. Sprzątamy. Listę usterek robimy z Tobą, nie przed Tobą. Wszystko działa zanim podpiszesz.</p>
+        <ul class="step-proof">
+          <li><span class="arrow">→</span> Brak listy "wykonamy po odbiorze"</li>
+          <li><span class="arrow">→</span> Pełna dokumentacja powykonawcza</li>
+        </ul>
+        <a href="#real" class="case-link"><span>Zobacz ten etap — PGE Ogrodowa</span><span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="4">
+      <div class="tab-media">
+        <div class="counter"><span class="counter-num">05</span><span class="counter-total">/ 05</span></div>
+        <span class="bracket tr"></span><span class="bracket bl"></span>
+        <div class="media-placeholder">
+          <div class="slot-label">Etap 05 · Serwis</div>
+          <div class="slot-title">Wsparcie</div>
+          <div class="slot-hint">Tu wstaw zdjęcie: technik PLANY na serwisie, kontakt telefoniczny z klientem, gotowe wnętrze</div>
+          <div class="slot-spec">4:5 · 1600px · WebP</div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="step-eyebrow">
+          <span class="num">05</span>
+          <span class="label">Serwis</span>
+          <span class="duration">ciągłość</span>
+        </div>
+        <h3 class="step-title">Serwis <em>gwarancyjny</em></h3>
+        <p class="step-deliverable">Serwis gwarancyjny i pogwarancyjny realizowany przez własny zespół techniczny.</p>
+        <p class="step-body">Czas reakcji 48h. Stałe warunki współpracy dla klientów wielolokalowych. Ten sam kierownik odbiera telefon rok po odbiorze — bez przerzucania na podwykonawców.</p>
+        <ul class="step-proof">
+          <li><span class="arrow">→</span> Reakcja w 48h</li>
+          <li><span class="arrow">→</span> Stałe warunki dla sieci</li>
+          <li><span class="arrow">→</span> Jeden kontakt na lata</li>
+        </ul>
+        <a href="#kontakt" class="case-link"><span>Porozmawiajmy o serwisie</span><span>↗</span></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     MODE B — BENTO GRID
+     ============================================================ -->
+<section class="mode" data-mode-content="grid">
+  <div class="grid-wrap">
+    <div class="grid">
+
+      <article class="card" data-step="0" style="--rot: -2deg">
+        <span class="card-bignum">01</span>
+        <span class="card-num">01</span>
+        <span class="card-label">Konsultacja · 2–5 dni</span>
+        <h3 class="card-title">Weryfikacja <em>zakresu i kosztu</em></h3>
+        <p class="card-deliv">W 48h gotowa wycena rozbita pozycyjnie.</p>
+        <div class="card-meta">
+          <span>Wizja lokalna 48h</span><span class="dot">·</span>
+          <span>Wycena bezpłatna</span>
+        </div>
+      </article>
+
+      <article class="card" data-step="1" style="--rot: 2deg">
+        <span class="card-bignum">02</span>
+        <span class="card-num">02</span>
+        <span class="card-label">Dokumentacja · 5–10 dni</span>
+        <h3 class="card-title">Zamknięty <em>kosztorys</em></h3>
+        <p class="card-deliv">Wszystko ustalone, zanim ekipa wejdzie na budowę.</p>
+        <div class="card-meta">
+          <span>Pozycja po pozycji</span><span class="dot">·</span>
+          <span>Stałe ceny</span>
+        </div>
+      </article>
+
+      <article class="card" data-step="2" style="--rot: -1deg">
+        <div>
+          <span class="card-bignum">03</span>
+          <span class="card-num">03</span>
+          <span class="card-label">Budowa · 8–16 tyg.</span>
+          <h3 class="card-title">Realizacja <em>własnymi ekipami</em></h3>
+          <p class="card-deliv">30 osób na stałe. 10 elektryków in-house. Stali podwykonawcy od 10+ lat.</p>
+          <div class="card-meta">
+            <span>Kierownik na placu</span><span class="dot">·</span>
+            <span>Raport tygodniowy</span><span class="dot">·</span>
+            <span>Harmonogram online</span>
+          </div>
+        </div>
+        <div class="card-hero-img">
+          <div class="slot-label">Etap 03 · Budowa</div>
+          <div class="slot-title">Ekipa na placu</div>
+          <div class="slot-hint">Tu wstaw zdjęcie z budowy</div>
+        </div>
+      </article>
+
+      <article class="card" data-step="3" style="--rot: 1deg">
+        <span class="card-bignum">04</span>
+        <span class="card-num">04</span>
+        <span class="card-label">Odbiór · 1–3 dni</span>
+        <h3 class="card-title">Odbiór <em>z dokumentacją</em></h3>
+        <p class="card-deliv">Komplet papierów do każdego urzędu.</p>
+        <div class="card-meta">
+          <span>Sanepid · PSP · NB</span><span class="dot">·</span>
+          <span>Bez "po odbiorze"</span>
+        </div>
+      </article>
+
+      <article class="card" data-step="4" style="--rot: -2deg">
+        <span class="card-bignum">05</span>
+        <span class="card-num">05</span>
+        <span class="card-label">Serwis · ciągłość</span>
+        <h3 class="card-title">Serwis <em>gwarancyjny</em></h3>
+        <p class="card-deliv">Czas reakcji 48h. Stałe warunki dla klientów wielolokalowych.</p>
+        <div class="card-meta">
+          <span>Reakcja 48h</span><span class="dot">·</span>
+          <span>Jeden kontakt na lata</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta">
+  <div class="cta-inner">
+    <div>
+      <div class="eyebrow">Następny krok</div>
+      <h3 class="cta-display">
+        Twój projekt zaczyna się<br>
+        <em>na pierwszym spotkaniu.</em>
+      </h3>
+    </div>
+    <div class="cta-buttons">
+      <a href="#kontakt" class="btn btn-primary">
+        <span>Umów konsultację</span>
+        <span class="arrow">→</span>
+      </a>
+      <a href="#real" class="btn btn-secondary">
+        <span>Zobacz realizacje</span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTES ============ -->
+<section class="notes">
+  <div class="notes-inner">
+    <div class="notes-title">★ Notatki produkcyjne — usuń przed deployem</div>
+    <div class="notes-grid">
+      <p><strong>Tryb A — Zakładki</strong>Klik na numer = etap "wyskakuje". Clip-path reveal zdjęcia + stagger contentu (każdy element wjeżdża z opóźnieniem). Counter w rogu robi scale-pop.</p>
+      <p><strong>Tryb B — Bento Grid</strong>Wszystkie 5 widoczne. Wjeżdżają z dołu z lekkim obrotem + blur, na scroll. Asymetryczny layout (7+5, 12, 5+7). Hover = akcent.</p>
+      <p><strong>Zdjęcia (5 szt.)</strong>Tryb A: 4:5 portret. Tryb B: jedno duże 4:3 w karcie 03. Min. 1600px, WebP/AVIF. Podpisz <code>etap-01.webp</code> ... <code>etap-05.webp</code></p>
+      <p><strong>Animacje w prod</strong>Tu czysty CSS + IntersectionObserver. W Next.js 15 możesz przepisać na GSAP z `gsap.from()` + ScrollTrigger (mocniejszy easing) ale CSS tu wystarczy.</p>
+      <p><strong>Wybór trybu</strong>Tryb A = więcej kontroli, lepszy storytelling, mniej miejsca na stronie. Tryb B = wszystko widoczne, lepsze dla skim-readerów (procurement), więcej miejsca.</p>
+      <p><strong>Kolory</strong>Bg #0D0B09 · Akcent #D4734A · Tekst #F5F1EA — zgodne z Twoją stroną.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ============ MODE SWITCHER ============
+  const modeButtons = document.querySelectorAll('.mode-toggle button');
+  const modes = document.querySelectorAll('.mode');
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.mode;
+      modeButtons.forEach(b => b.classList.toggle('active', b === btn));
+      modes.forEach(m => m.classList.toggle('active', m.dataset.modeContent === target));
+      // Re-trigger grid animation
+      if (target === 'grid') {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('in'));
+        setTimeout(triggerGrid, 50);
+      }
+    });
+  });
+
+  // ============ TABS ============
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      panels.forEach((p, i) => {
+        p.classList.toggle('active', i === idx);
+        // Re-trigger animations
+        if (i === idx) {
+          p.style.animation = 'none';
+          p.offsetHeight;
+          p.style.animation = '';
+        }
+      });
+    });
+  });
+
+  // Auto-cycle through tabs every 8s (commented out by default)
+  // let autoIdx = 0;
+  // setInterval(() => {
+  //   autoIdx = (autoIdx + 1) % tabBtns.length;
+  //   tabBtns[autoIdx].click();
+  // }, 8000);
+
+  // ============ GRID REVEAL ============
+  function triggerGrid() {
+    const cards = document.querySelectorAll('.card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const delay = parseInt(card.dataset.step) * 120;
+          setTimeout(() => card.classList.add('in'), delay);
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    cards.forEach(c => observer.observe(c));
+  }
+  triggerGrid();
+</script>
+
+</body>
+</html>
